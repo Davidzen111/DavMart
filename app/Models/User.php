@@ -21,7 +21,30 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',    
+        'status',  
+        'phone',   
+        'address',
     ];
+
+    public function store() { 
+        return $this->hasOne(Store::class); 
+    }
+
+    // Relasi ke Keranjang (Buyer)
+    public function cart() {
+        return $this->hasOne(Cart::class);
+    }
+
+    // Relasi ke Order History (Buyer)
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    // Relasi ke Alamat (Buyer)
+    public function addresses() {
+        return $this->hasMany(UserAddress::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

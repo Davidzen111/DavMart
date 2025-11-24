@@ -1,17 +1,48 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Seller\SellerController;
+use App\Http\Controllers\Buyer\BuyerController;
 use Illuminate\Support\Facades\Route;
 
+// Halaman Depan (Public)
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('welcome'); // Nanti diganti jadi Homepage Produk
+})->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Grouping Route berdasarkan Role
+Route::middleware(['auth', 'verified'])->group(function () {
 
-Route::middleware('auth')->group(function () {
+    // 1. BUYER ROUTES
+    Route::middleware('role:buyer')->group(function () {
+        Route::get('/dashboard', [BuyerController::class, 'index'])->name('dashboard');
+        // Nanti tambah route cart, checkout disini
+    });
+
+    // 2. SELLER ROUTES
+    Route::middleware('role:seller')->prefix('seller')->name('seller.')->group(function () {
+        Route::get('/dashboard', [SellerController::class, 'index'])->name('dashboard');
+        
+        // Halaman Pending & Rejected (Di luar dashboard tapi masih role seller)
+        Route::get('/pending', [SellerController::class, 'pending'])->name('pending')->withoutMiddleware('role:seller');
+        Route::get('/rejected', [SellerController::class, 'rejected'])->name('rejected')->withoutMiddleware('role:seller');
+        
+        // Nanti tambah route produk management disini (ProductController)
+    });
+
+    // 3. ADMIN ROUTES
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        
+        // Fitur Verifikasi Seller
+        Route::get('/seller-verification', [AdminController::class, 'sellerVerification'])->name('seller.verification');
+        Route::patch('/seller-verification/{id}', [AdminController::class, 'approveSeller'])->name('seller.approve');
+
+        // Fitur Category Management (SUDAH BENAR DISINI) ✅
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    });
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

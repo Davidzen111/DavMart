@@ -16,14 +16,10 @@
                 </div>
                 <div class="flex items-center gap-4">
                     @auth
-                        @if(Auth::user()->role === 'buyer')
-                            <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-blue-600">Keranjang</a>
-                            <a href="{{ route('wishlist.index') }}" class="text-gray-600 hover:text-red-500">Wishlist ❤️</a>
-                        @endif
-                        <a href="{{ route('dashboard') }}" class="font-bold text-gray-800">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-blue-600">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900">Masuk</a>
-                        <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">Daftar</a>
+                        <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-700 font-bold">Daftar</a>
                     @endauth
                 </div>
             </div>
@@ -33,14 +29,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="bg-white rounded-lg shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8 mb-8">
-                <div class="bg-gray-100 rounded-lg overflow-hidden h-96 flex items-center justify-center relative">
+                <div class="bg-gray-100 rounded-lg overflow-hidden h-96 flex items-center justify-center">
                     @if($product->image)
                         <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-contain">
                     @else
@@ -49,25 +39,27 @@
                 </div>
 
                 <div>
-                    <div class="mb-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase">
-                            {{ $product->category->name }}
-                        </span>
-                        <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ $product->name }}</h1>
-                        
-                        <div class="flex items-center mt-2">
-                            <span class="text-yellow-400 text-xl">★</span>
-                            <span class="font-bold text-gray-700 ml-1">{{ number_format($ratingAvg, 1) }}</span>
-                            <span class="text-gray-500 text-sm ml-1">({{ $ratingCount }} Ulasan)</span>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase">
+                                {{ $product->category->name }}
+                            </span>
+                            <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ $product->name }}</h1>
+                            
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-400 text-xl">★</span>
+                                <span class="font-bold text-gray-700 ml-1">{{ number_format($ratingAvg, 1) }}</span>
+                                <span class="text-gray-500 text-sm ml-1">({{ $ratingCount }} Ulasan)</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-6">
+                    <div class="mt-6">
                         <p class="text-4xl font-bold text-blue-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                        <p class="text-gray-500 mt-1 text-sm">Stok Tersedia: <strong>{{ $product->stock }}</strong></p>
+                        <p class="text-gray-500 mt-1">Stok Tersedia: {{ $product->stock }}</p>
                     </div>
 
-                    <div class="border-t border-b py-4 mb-6">
+                    <div class="mt-6 border-t border-b py-4">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
                                 {{ substr($product->store->name, 0, 1) }}
@@ -79,27 +71,28 @@
                         </div>
                     </div>
 
-                    <div class="mb-8">
+                    <div class="mt-6">
                         <h3 class="font-bold text-gray-800 mb-2">Deskripsi Produk</h3>
-                        <p class="text-gray-600 leading-relaxed text-sm">{{ $product->description }}</p>
+                        <p class="text-gray-600 leading-relaxed">{{ $product->description }}</p>
                     </div>
 
-                    <div class="flex flex-col gap-3">
+                    <div class="mt-8">
                         @auth
                             @if(Auth::user()->role === 'buyer')
-                                <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="mt-2">
                                     @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                        + Masukkan Keranjang
+                                    <button type="submit" class="text-gray-500 hover:text-red-500 font-bold text-sm flex items-center gap-2">
+                                        ❤️ Simpan ke Favorit
                                     </button>
                                 </form>
+                                @endif
 
-                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="w-full">
+                            @if(Auth::user()->role === 'buyer')
+                                <form action="{{ route('cart.add') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="w-full bg-white border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:border-red-400 hover:text-red-500 transition flex justify-center items-center gap-2">
-                                        ❤️ Simpan ke Favorit
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">
+                                        + Masukkan Keranjang
                                     </button>
                                 </form>
                             @else
@@ -117,7 +110,7 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Ulasan Pembeli</h3>
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Ulasan Pembeli</h3>
 
                 @if($product->reviews->isEmpty())
                     <div class="text-center py-8">
@@ -126,10 +119,10 @@
                 @else
                     <div class="space-y-6">
                         @foreach($product->reviews as $review)
-                        <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                        <div class="border-b border-gray-100 pb-6 last:border-0">
                             <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-600">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
                                         {{ substr($review->user->name, 0, 1) }}
                                     </div>
                                     <div>
@@ -142,7 +135,7 @@
                                     @for($i=$review->rating; $i < 5; $i++) <span class="text-gray-300">★</span> @endfor
                                 </div>
                             </div>
-                            <p class="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg mt-2">
+                            <p class="text-gray-600 text-sm leading-relaxed bg-gray-50 p-3 rounded">
                                 "{{ $review->review }}"
                             </p>
                         </div>

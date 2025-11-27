@@ -13,17 +13,25 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     // 1. Proses Checkout
-    public function checkout()
+    public function checkout(Request $request)
     {
+        // Validasi: Alamat Wajib Diisi
+        $request->validate([
+            'address' => 'required|string|max:500',
+        ]);
+
         $user = Auth::user();
+        
+        // Ambil keranjang user
         $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
 
+        // Cek jika keranjang kosong
         if (!$cart || $cart->items->count() == 0) {
-            return back()->with('error', 'Keranjang kosong!');
+            return back()->with('error', 'Keranjang belanja Anda kosong!');
         }
 
-        // Gunakan Database Transaction biar aman (Kalau error, rollback semua)
-        DB::transaction(function () use ($user, $cart) {
+        // Gunakan Transaksi Database (Agar aman data tidak korup)
+        DB::transaction(function () use ($user, $cart, $request) {
             
             // A. Hitung Total Harga
             $totalPrice = 0;
@@ -31,34 +39,36 @@ class OrderController extends Controller
                 $totalPrice += $item->product->price * $item->quantity;
             }
 
-            // B. Buat Order Header
+            // B. Buat Header Order (Simpan Alamat Disini)
             $order = Order::create([
                 'user_id' => $user->id,
                 'total_price' => $totalPrice,
                 'status' => 'pending',
                 'invoice_code' => 'INV-' . now()->format('YmdHis') . '-' . $user->id,
+                'shipping_address' => $request->address, // ✅ Simpan Alamat dari Form
             ]);
 
-            // C. Pindahkan Item Cart ke Order Item
+            // C. Pindahkan Item dari Keranjang ke Order Item
             foreach ($cart->items as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
-                    'store_id' => $item->product->store_id, // PENTING: Supaya Seller bisa lihat orderan ini
+                    'store_id' => $item->product->store_id, // Penting untuk Seller
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
                     'subtotal' => $item->product->price * $item->quantity,
+                    'status' => 'pending',
                 ]);
 
                 // D. Kurangi Stok Produk
                 $item->product->decrement('stock', $item->quantity);
             }
 
-            // E. Kosongkan Keranjang
+            // E. Kosongkan Keranjang setelah berhasil
             $cart->items()->delete();
         });
 
-        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
+        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat! Mohon tunggu konfirmasi penjual.');
     }
 
     // 2. Lihat Riwayat Pesanan
@@ -66,5 +76,15 @@ class OrderController extends Controller
     {
         $orders = Order::where('user_id', Auth::id())->latest()->get();
         return view('buyer.orders.index', compact('orders'));
+    }
+
+    // 3. Lihat Detail Pesanan (Untuk Review & Cek Status)
+    public function show($id)
+    {
+        $order = Order::with('items.product.store')
+                      ->where('user_id', Auth::id())
+                      ->findOrFail($id);
+
+        return view('buyer.orders.show', compact('order'));
     }
 }

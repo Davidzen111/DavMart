@@ -20,6 +20,11 @@ return new class extends Migration
             $table->integer('quantity');
             $table->bigInteger('price'); // Harga saat checkout
             $table->bigInteger('subtotal');
+            
+            // ✅✅✅ BARIS INI YANG HILANG SEBELUMNYA ✅✅✅
+            $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
+            // ----------------------------------------------
+
             $table->timestamps();
         });
     }

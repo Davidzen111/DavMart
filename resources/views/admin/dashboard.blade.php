@@ -18,7 +18,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
+                            <a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
                                 👥 User Management
                             </a>
                         </li>
@@ -30,6 +30,11 @@
                         <li>
                             <a href="{{ route('admin.categories.index') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600 {{ request()->routeIs('admin.categories.*') ? 'bg-blue-600 text-white' : '' }}">
                                 📦 Category Management
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.products.index') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
+                                ⚠️ Monitoring Produk
                             </a>
                         </li>
                     </ul>

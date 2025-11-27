@@ -57,13 +57,19 @@ class ProductController extends Controller
             'image' => $imagePath,
         ]);
 
+        // ✅ LOGIKA REDIRECT BARU (INI YANG DIUBAH) ✅
+        // Cek titipan sinyal 'source' dari form
+        if ($request->has('source') && $request->source == 'dashboard') {
+            return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil ditambahkan!');
+        }
+
+        // Default: Kembali ke List Produk
         return redirect()->route('seller.products.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
     // 4. Form Edit
     public function edit($id)
     {
-        // Pastikan produk milik toko sendiri (Security)
         $product = Product::where('store_id', Auth::user()->store->id)->findOrFail($id);
         $categories = Category::all();
         
@@ -84,13 +90,10 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Cek jika ada upload gambar baru
         if ($request->hasFile('image')) {
-            // Hapus gambar lama
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            // Upload baru
             $product->image = $request->file('image')->store('products', 'public');
         }
 
@@ -111,7 +114,6 @@ class ProductController extends Controller
     {
         $product = Product::where('store_id', Auth::user()->store->id)->findOrFail($id);
         
-        // Hapus gambar dari penyimpanan
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }

@@ -28,19 +28,29 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // AMBIL ROLE USER YANG SEDANG LOGIN
-        $role = $request->user()->role;
+        // Ambil User Lengkap (Bukan cuma role)
+        $user = $request->user();
 
-        // CEK DAN ARAHKAN SESUAI ROLE
-        if ($role === 'admin') {
+        // 1. Cek Admin
+        if ($user->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         } 
         
-        if ($role === 'seller') {
+        // 2. Cek Seller
+        if ($user->role === 'seller') {
+            // LOGIKA TAMBAHAN: Cek Status Approval
+            if ($user->status == 'pending') {
+                return redirect()->route('seller.pending');
+            }
+            if ($user->status == 'rejected') {
+                return redirect()->route('seller.rejected');
+            }
+
+            // Kalau status 'approved', baru boleh masuk dashboard
             return redirect()->intended(route('seller.dashboard'));
         }
 
-        // Default: Buyer atau User biasa ke Dashboard Buyer
+        // 3. Default (Buyer)
         return redirect()->intended(route('dashboard'));
     }
 

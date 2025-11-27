@@ -81,11 +81,19 @@
                             <h3 class="text-3xl font-bold text-gray-800">Rp {{ number_format($grandTotal, 0, ',', '.') }}</h3>
                         </div>
                         
-                        <form action="{{ route('checkout') }}" method="POST">
+                        <form action="{{ route('checkout') }}" method="POST" class="mt-4">
                             @csrf
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition transform hover:scale-105" onclick="return confirm('Proses checkout sekarang?')">
-                                Checkout Sekarang
-                            </button>
+                            
+                            <div class="mb-4 text-left">
+                                <label class="block text-gray-700 font-bold mb-2">Alamat Pengiriman</label>
+                                <textarea name="address" class="w-full border rounded px-3 py-2" rows="2" required placeholder="Jalan, Nomor Rumah, Kota, Kode Pos..."></textarea>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition transform hover:scale-105" onclick="return confirm('Proses checkout sekarang?')">
+                                    Checkout Sekarang
+                                </button>
+                            </div>
                         </form>
                     </div>
                 @endif

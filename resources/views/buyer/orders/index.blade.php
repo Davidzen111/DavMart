@@ -63,7 +63,9 @@
                                             </span>
                                         </td>
                                         <td class="py-3 px-6 text-center">
-                                            <button class="text-gray-500 text-xs font-bold underline hover:text-blue-600">Detail</button>
+                                            <a href="{{ route('orders.show', $order->id) }}" class="text-blue-500 hover:text-blue-700 font-bold text-xs underline">
+                                                Detail
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach

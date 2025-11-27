@@ -32,11 +32,13 @@
                 <div class="flex items-center gap-4">
                     @auth
                         @if(Auth::user()->role === 'buyer')
-                            <a href="#" class="relative p-2 text-gray-600 hover:text-blue-600">
+                            <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-600 hover:text-blue-600">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
-                                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-1.5 rounded-full">0</span>
+                                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-1.5 rounded-full">
+                                    {{ Auth::user()->cart?->items->count() ?? 0 }}
+                                </span>
                             </a>
                         @endif
 
@@ -60,13 +62,12 @@
                                         <x-dropdown-link :href="route('seller.dashboard')">Seller Dashboard</x-dropdown-link>
                                     @else
                                         <x-dropdown-link :href="route('dashboard')">Profil Saya</x-dropdown-link>
-                                        <x-dropdown-link href="#">Riwayat Pesanan</x-dropdown-link>
+                                        <x-dropdown-link :href="route('orders.index')">Riwayat Pesanan</x-dropdown-link>
                                     @endif
 
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <x-dropdown-link :href="route('logout')"
-                                                onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                                             {{ __('Log Out') }}
                                         </x-dropdown-link>
                                     </form>
@@ -93,7 +94,6 @@
         
         <div class="flex justify-between items-end mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Rekomendasi Produk</h2>
-            
             <div class="hidden md:block">
                 @foreach($categories as $cat)
                     <a href="#" class="inline-block px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-600 hover:bg-blue-50 hover:border-blue-500 mr-2 mb-2">
@@ -111,16 +111,19 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach($products as $product)
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-300 overflow-hidden group">
+                    
                     <div class="relative h-48 bg-gray-100 overflow-hidden">
-                        @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        @else
-                            <div class="flex items-center justify-center h-full text-gray-400 bg-gray-200">
-                                No Image
-                            </div>
-                        @endif
+                        <a href="{{ route('product.detail', $product->id) }}" class="block w-full h-full">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            @else
+                                <div class="flex items-center justify-center h-full text-gray-400 bg-gray-200">
+                                    No Image
+                                </div>
+                            @endif
+                        </a>
                         
-                        <span class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                        <span class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded pointer-events-none">
                             {{ $product->category->name }}
                         </span>
                     </div>
@@ -133,15 +136,26 @@
                             <span class="text-xs text-gray-500 truncate">{{ $product->store->name }}</span>
                         </div>
 
-                        <h3 class="font-bold text-gray-800 text-sm mb-2 truncate" title="{{ $product->name }}">
-                            {{ $product->name }}
+                        <h3 class="font-bold text-gray-800 text-sm mb-1 truncate" title="{{ $product->name }}">
+                            <a href="{{ route('product.detail', $product->id) }}" class="hover:text-blue-600 transition">
+                                {{ $product->name }}
+                            </a>
                         </h3>
                         
+                        <div class="flex items-center mb-3">
+                            <span class="text-yellow-400 text-sm">★</span>
+                            <span class="text-xs text-gray-600 ml-1 font-medium">
+                                {{ number_format($product->reviews->avg('rating'), 1) }} 
+                                <span class="text-gray-400 font-normal">({{ $product->reviews->count() }})</span>
+                            </span>
+                        </div>
+
                         <p class="text-blue-600 font-bold text-lg mb-4">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </p>
 
-                        <form action="{{ route('cart.add') }}" method="POST"> @csrf
+                        <form action="{{ route('cart.add') }}" method="POST"> 
+                            @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <button type="submit" class="w-full bg-blue-600 text-white text-sm font-bold py-2 rounded hover:bg-blue-700 transition flex justify-center items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

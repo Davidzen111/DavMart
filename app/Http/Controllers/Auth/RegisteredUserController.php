@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Store; // Pastikan Model Store di-import
+use App\Models\Cart; // Pastikan Model Cart di-import
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Providers\RouteServiceProvider;
 
 class RegisteredUserController extends Controller
 {
@@ -33,18 +36,51 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:buyer,seller'], // Validasi input Role dari form
         ]);
 
+        // 1. Tentukan Status Awal
+        $status = ($request->role === 'seller') ? 'pending' : 'approved';
+
+        // 2. Buat User Baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role, // Simpan role (buyer/seller)
+            'status' => $status, // Simpan status
         ]);
+
+        // 3. Logika Tambahan Berdasarkan Role
+        if ($request->role === 'seller') {
+            // Jika Seller: Buatkan Toko Otomatis
+            Store::create([
+                'user_id' => $user->id,
+                'name' => 'Toko ' . $request->name, 
+                'slug' => \Illuminate\Support\Str::slug('Toko ' . $request->name . '-' . $user->id),
+                'description' => 'Deskripsi toko belum diatur.',
+            ]);
+        } elseif ($request->role === 'buyer') {
+            // Jika Buyer: Buatkan Keranjang Kosong
+            Cart::create([
+                'user_id' => $user->id
+            ]);
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
+        
+        // --- PESAN SELAMAT DIHAPUS ---
+        // $request->session()->flash('register_success', true); // Baris ini dihapus/dihilangkan
 
-        return redirect(route('dashboard', absolute: false));
+        // 4. Redirect (Pengalihan Halaman)
+        if ($user->role === 'seller') {
+            // Seller baru pasti pending -> Arahkan ke halaman pending
+            return redirect()->route('seller.pending');
+        }
+
+        // Buyer -> Arahkan ke dashboard utama
+        return redirect(RouteServiceProvider::HOME); 
     }
 }

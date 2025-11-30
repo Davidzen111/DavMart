@@ -16,6 +16,6 @@ class BuyerController extends Controller
                         ->latest()
                         ->get();
 
-        return view('dashboard', compact('orders'));
+        return view('buyer.dashboard', compact('orders'));
     }
 }

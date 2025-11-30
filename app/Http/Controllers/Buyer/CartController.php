@@ -58,4 +58,24 @@ class CartController extends Controller
         CartItem::destroy($id);
         return back()->with('success', 'Item dihapus dari keranjang.');
     }
+
+    public function updateQuantity(Request $request, $itemId)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1', // Pastikan kuantitas minimal 1
+        ]);
+
+        $item = CartItem::findOrFail($itemId);
+
+        // Keamanan: Pastikan item ini memang milik user yang sedang login
+        if ($item->cart->user_id !== Auth::id()) {
+            return back()->with('error', 'Akses ditolak.');
+        }
+        
+        // Asumsi: Produk kamu punya stock check di level model/service
+        $item->quantity = $request->quantity;
+        $item->save();
+
+        return back()->with('success', 'Jumlah produk berhasil diperbarui.');
+    }
 }

@@ -63,6 +63,7 @@
                                             </span>
                                         </td>
                                         <td class="py-3 px-6 text-center">
+                                            {{-- PERBAIKAN: Link Detail sekarang berfungsi --}}
                                             <a href="{{ route('orders.show', $order->id) }}" class="text-blue-500 hover:text-blue-700 font-bold text-xs underline">
                                                 Detail
                                             </a>

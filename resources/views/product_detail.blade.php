@@ -26,9 +26,20 @@
         </div>
     </nav>
 
-    <div class="py-12">
+    <div class="py-8 md:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
+            <div class="mb-6">
+                <a href="{{ url()->previous() }}" class="inline-flex items-center text-gray-600 hover:text-blue-600 font-medium transition group">
+                    <div class="w-8 h-8 rounded-full bg-white border border-gray-300 flex items-center justify-center mr-2 group-hover:border-blue-600 group-hover:bg-blue-50 transition shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </div>
+                    Kembali
+                </a>
+            </div>
+
             <div class="bg-white rounded-lg shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8 mb-8">
                 <div class="bg-gray-100 rounded-lg overflow-hidden h-96 flex items-center justify-center">
                     @if($product->image)
@@ -85,23 +96,23 @@
                                         ❤️ Simpan ke Favorit
                                     </button>
                                 </form>
-                                @endif
+                            @endif
 
                             @if(Auth::user()->role === 'buyer')
                                 <form action="{{ route('cart.add') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">
+                                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg mt-4">
                                         + Masukkan Keranjang
                                     </button>
                                 </form>
                             @else
-                                <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed mt-4">
                                     Login sebagai Buyer untuk membeli
                                 </button>
                             @endif
                         @else
-                            <a href="{{ route('login') }}" class="block text-center w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">
+                            <a href="{{ route('login') }}" class="block text-center w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg mt-4">
                                 Login untuk Membeli
                             </a>
                         @endauth

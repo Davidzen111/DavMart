@@ -1,158 +1,167 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $product->name }} - DavMart</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-50 font-sans antialiased">
-
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">🛍️ DavMart</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    @auth
-                        @if(Auth::user()->role === 'buyer')
-                            <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-blue-600">Keranjang</a>
-                            <a href="{{ route('wishlist.index') }}" class="text-gray-600 hover:text-red-500">Wishlist ❤️</a>
-                        @endif
-                        <a href="{{ route('dashboard') }}" class="font-bold text-gray-800">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900">Masuk</a>
-                        <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">Daftar</a>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <!-- Primary Navigation Menu -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
             
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                    {{ session('success') }}
+            <!-- BAGIAN KIRI: Logo & Menu Navigasi (KODE ASLI KAMU) -->
+            <div class="flex shrink-0">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('home') }}">
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    </a>
                 </div>
-            @endif
 
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8 mb-8">
-                <div class="bg-gray-100 rounded-lg overflow-hidden h-96 flex items-center justify-center relative">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-contain">
-                    @else
-                        <span class="text-gray-400">No Image</span>
+                <!-- Navigation Links (Menu Utama Desktop) -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    
+                    <!-- 1. Menu Dashboard (Untuk Semua) -->
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+
+                    <!-- 2. Menu Khusus Buyer -->
+                    @if(Auth::user()->role === 'buyer')
+                        
+                        <!-- Link Riwayat Pesanan -->
+                        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')">
+                            {{ __('Riwayat Pesanan') }}
+                        </x-nav-link>
+
+                        <!-- Link Wishlist -->
+                        <x-nav-link :href="route('wishlist.index')" :active="request()->routeIs('wishlist.index')">
+                            {{ __('Wishlist ❤️') }}
+                        </x-nav-link>
+
+                    @endif
+
+                    <!-- 3. Menu Khusus Admin -->
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                            {{ __('Users') }}
+                        </x-nav-link>
                     @endif
                 </div>
-
-                <div>
-                    <div class="mb-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase">
-                            {{ $product->category->name }}
-                        </span>
-                        <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ $product->name }}</h1>
-                        
-                        <div class="flex items-center mt-2">
-                            <span class="text-yellow-400 text-xl">★</span>
-                            <span class="font-bold text-gray-700 ml-1">{{ number_format($ratingAvg, 1) }}</span>
-                            <span class="text-gray-500 text-sm ml-1">({{ $ratingCount }} Ulasan)</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-4xl font-bold text-blue-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                        <p class="text-gray-500 mt-1 text-sm">Stok Tersedia: <strong>{{ $product->stock }}</strong></p>
-                    </div>
-
-                    <div class="border-t border-b py-4 mb-6">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
-                                {{ substr($product->store->name, 0, 1) }}
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Dijual oleh:</p>
-                                <p class="font-bold text-gray-800">{{ $product->store->name }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-8">
-                        <h3 class="font-bold text-gray-800 mb-2">Deskripsi Produk</h3>
-                        <p class="text-gray-600 leading-relaxed text-sm">{{ $product->description }}</p>
-                    </div>
-
-                    <div class="flex flex-col gap-3">
-                        @auth
-                            @if(Auth::user()->role === 'buyer')
-                                <form action="{{ route('cart.add') }}" method="POST" class="w-full">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                        + Masukkan Keranjang
-                                    </button>
-                                </form>
-
-                                <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="w-full">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-white border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:border-red-400 hover:text-red-500 transition flex justify-center items-center gap-2">
-                                        ❤️ Simpan ke Favorit
-                                    </button>
-                                </form>
-                            @else
-                                <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                    Login sebagai Buyer untuk membeli
-                                </button>
-                            @endif
-                        @else
-                            <a href="{{ route('login') }}" class="block text-center w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">
-                                Login untuk Membeli
-                            </a>
-                        @endauth
-                    </div>
-                </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Ulasan Pembeli</h3>
-
-                @if($product->reviews->isEmpty())
-                    <div class="text-center py-8">
-                        <p class="text-gray-500 italic">Belum ada ulasan untuk produk ini.</p>
+            <!-- BAGIAN TENGAH: SEARCH BAR (BARU DITAMBAHKAN) -->
+            <!-- Hanya muncul di Desktop (hidden sm:flex) -->
+            <div class="hidden sm:flex flex-1 items-center justify-center px-6">
+                <form action="{{ route('home') }}" method="GET" class="w-full max-w-md relative">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ request('search') }}"
+                           placeholder="Cari produk impianmu..." 
+                           class="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition shadow-sm">
+                    
+                    <!-- Ikon Kaca Pembesar -->
+                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                     </div>
-                @else
-                    <div class="space-y-6">
-                        @foreach($product->reviews as $review)
-                        <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-600">
-                                        {{ substr($review->user->name, 0, 1) }}
-                                    </div>
-                                    <div>
-                                        <p class="font-bold text-sm text-gray-800">{{ $review->user->name }}</p>
-                                        <p class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex text-yellow-400 text-sm">
-                                    @for($i=0; $i < $review->rating; $i++) ★ @endfor
-                                    @for($i=$review->rating; $i < 5; $i++) <span class="text-gray-300">★</span> @endfor
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg mt-2">
-                                "{{ $review->review }}"
-                            </p>
-                        </div>
-                        @endforeach
-                    </div>
-                @endif
+                </form>
             </div>
 
+            <!-- BAGIAN KANAN: Settings Dropdown (KODE ASLI KAMU) -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <div>{{ Auth::user()->name }}</div>
+
+                            <div class="ms-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <!-- Link Profile Bawaan -->
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
+            </div>
+
+            <!-- Hamburger (Menu Mobile) (KODE ASLI KAMU) -->
+            <div class="-me-2 flex items-center sm:hidden">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
-</body>
-</html>
+    <!-- Responsive Navigation Menu (Tampilan HP) -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-gray-100">
+        
+        <!-- SEARCH BAR MOBILE (BARU DITAMBAHKAN) -->
+        <div class="p-4 border-b border-gray-100">
+            <form action="{{ route('home') }}" method="GET" class="relative">
+                <input type="text" name="search" placeholder="Cari produk..." class="w-full rounded-lg border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500">
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+            </form>
+        </div>
+        
+        <!-- MENU MOBILE (KODE ASLI KAMU) -->
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <!-- Menu Tambahan Mobile -->
+            @if(Auth::user()->role === 'buyer')
+                <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')">
+                    {{ __('Riwayat Pesanan') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('wishlist.index')" :active="request()->routeIs('wishlist.index')">
+                    {{ __('Wishlist ❤️') }}
+                </x-responsive-nav-link>
+            @endif
+        </div>
+
+        <!-- Responsive Settings Options (KODE ASLI KAMU) -->
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="px-4">
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+            </div>
+
+            <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <!-- Authentication -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-responsive-nav-link>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

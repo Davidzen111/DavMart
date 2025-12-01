@@ -1,46 +1,35 @@
-@extends('layouts.buyer')
+@extends('layouts.seller') 
 
-@section('title', 'Edit Profil - DavMart')
+@section('title', 'Pengaturan Akun Seller - DavMart')
 
 @section('content')
 
-    {{-- WRAPPER UNTUK MEMBATASI LEBAR KONTEN AGAR LEBIH RAPI (max-w-3xl) --}}
+    {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS (Diletakkan di dalam Content) --}}
+    @auth
+        @php
+            // Menentukan rute kembali (Seller saja, karena ini layout seller)
+            $backRoute = route('seller.dashboard');
+            $ariaLabel = 'Kembali ke Dashboard Toko';
+        @endphp
+    @endauth
+
+    {{-- HEADER HALAMAN KUSTOM (Tombol Kembali Dinamis) --}}
+    <div class="mb-8 flex items-center gap-4 pt-8"> {{-- Tambahkan pt-8 jika perlu padding atas --}}
+        {{-- Tombol Kembali Dinamis --}}
+        <a href="{{ $backRoute ?? route('seller.dashboard') }}" 
+           class="group flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 ease-in-out shadow-sm"
+           aria-label="{{ $ariaLabel ?? 'Kembali' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-0.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+        </a>
+
+        <h1 class="text-3xl font-bold text-gray-800 leading-tight">Pengaturan Akun</h1>
+    </div>
+
+    {{-- WRAPPER KONTEN (Dibatasi lebarnya agar rapih untuk form) --}}
     <div class="max-w-3xl mx-auto space-y-6">
-
-        {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS --}}
-        @auth
-            @php
-                $backRoute = match (Auth::user()->role) {
-                    'admin' => route('admin.dashboard'),
-                    'seller' => route('seller.dashboard'),
-                    default => route('dashboard'), // Buyer/Default
-                };
-                $ariaLabel = match (Auth::user()->role) {
-                    'admin' => 'Kembali ke Dashboard Admin',
-                    'seller' => 'Kembali ke Dashboard Toko',
-                    default => 'Kembali ke Dashboard Saya',
-                };
-            @endphp
-        @endauth
-
-        {{-- HEADER HALAMAN KUSTOM --}}
-        <div class="mb-8 flex items-center gap-4 mt-4">
-            {{-- Tombol Kembali Dinamis --}}
-            <a href="{{ $backRoute ?? route('home') }}" 
-               class="group flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 ease-in-out shadow-sm"
-               aria-label="{{ $ariaLabel ?? 'Kembali ke Beranda' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-0.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-            </a>
-
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800 leading-tight">
-                    {{ __('Pengaturan Akun') }} ⚙️
-                </h2>
-            </div>
-        </div>
-
+        
         {{-- 1. Form Informasi Profil --}}
         <div class="p-6 bg-white shadow-sm sm:rounded-xl border border-gray-100">
             <header>
@@ -53,15 +42,19 @@
                 @method('patch')
 
                 <div>
-                    <x-input-label for="name" :value="__('Nama Lengkap')" />
-                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                    <label for="name" class="block font-medium text-sm text-gray-700">{{ __('Nama Lengkap') }}</label>
+                    <input id="name" name="name" type="text" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
+                    @error('name')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input id="email" name="email" type="email" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" :value="old('email', $user->email)" required autocomplete="username" />
-                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                    <label for="email" class="block font-medium text-sm text-gray-700">{{ __('Email') }}</label>
+                    <input id="email" name="email" type="email" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" value="{{ old('email', $user->email) }}" required autocomplete="username" />
+                    @error('email')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center gap-4">
@@ -91,21 +84,27 @@
                 @method('put')
 
                 <div>
-                    <x-input-label for="current_password" :value="__('Kata Sandi Saat Ini')" />
-                    <x-text-input id="current_password" name="current_password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="current-password" />
-                    <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+                    <label for="current_password" class="block font-medium text-sm text-gray-700">{{ __('Kata Sandi Saat Ini') }}</label>
+                    <input id="current_password" name="current_password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="current-password" />
+                    @error('current_password', 'updatePassword')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="password" :value="__('Kata Sandi Baru')" />
-                    <x-text-input id="password" name="password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
-                    <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+                    <label for="password" class="block font-medium text-sm text-gray-700">{{ __('Kata Sandi Baru') }}</label>
+                    <input id="password" name="password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
+                    @error('password', 'updatePassword')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="password_confirmation" :value="__('Konfirmasi Kata Sandi Baru')" />
-                    <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
-                    <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+                    <label for="password_confirmation" class="block font-medium text-sm text-gray-700">{{ __('Konfirmasi Kata Sandi Baru') }}</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
+                    @error('password_confirmation', 'updatePassword')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center gap-4">
@@ -144,15 +143,11 @@
                     <h2 class="text-lg font-bold text-gray-900">Apakah Anda yakin ingin menghapus akun?</h2>
                     <p class="mt-1 text-sm text-gray-600">Akun yang dihapus tidak dapat dikembalikan. Silakan masukkan password Anda untuk konfirmasi.</p>
                     <div class="mt-6">
-                        <x-input-label for="password" value="Password" class="sr-only" />
-                        <x-text-input
-                            id="password"
-                            name="password"
-                            type="password"
-                            class="mt-1 block w-3/4 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg"
-                            placeholder="Password Anda"
-                        />
-                        <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                        <label for="password" class="sr-only">Password</label>
+                        <input id="password" name="password" type="password" class="mt-1 block w-3/4 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg" placeholder="Password Anda"/>
+                        @error('password', 'userDeletion')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="mt-6 flex justify-end gap-3">
                         <x-secondary-button x-on:click="$dispatch('close')">Batal</x-secondary-button>
@@ -161,7 +156,7 @@
                 </form>
             </x-modal>
         </div>
-        
+
     </div>
 
 @endsection

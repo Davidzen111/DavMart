@@ -10,56 +10,33 @@
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
-    {{-- ========================================================================================= --}}
-    {{-- NAVIGASI UTAMA (HEADER) - LOGO DIPERBESAR SEDIKIT (w-14) --}}
-    {{-- ========================================================================================= --}}
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {{-- Container: Tetap h-20 agar tidak terlalu sempit --}}
-            <div class="flex justify-between items-center h-20 py-2">
+            {{-- UPDATED: Tinggi Header diubah dari h-16 ke h-20 --}}
+            <div class="flex justify-between items-center h-20 gap-2">
                 
+                {{-- LOGO --}}
                 <div class="flex items-center shrink-0">
-                    {{-- Font Brand: text-2xl --}}
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600 flex items-center gap-3">
-                        {{-- Logo: Diubah dari w-12 menjadi w-14 (56px) --}}
-                        <img src="{{ asset('images/logo.png') }}" alt="DavMart Logo" class="w-14 h-14 rounded-full object-cover border border-blue-100">
+                    <a href="{{ route('home') }}" class="text-3xl font-bold text-blue-600 flex items-center gap-3">
+                        {{-- UPDATED: Logo size jadi w-14 h-14 --}}
+                        <img src="{{ asset('images/logo.png') }}" alt="DavMart Logo" class="w-14 h-14 rounded-full object-cover border-2 border-blue-100">
                         <span class="hidden sm:inline">DavMart</span><span class="sm:hidden">DM</span>
                     </a>
                 </div>
 
+                {{-- USER MENU --}}
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-                    @auth
-                        {{-- Icon Keranjang --}}
-                        @if(Auth::user()->role === 'buyer')
-                            <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-600 hover:text-blue-600 transition">
-                                {{-- Icon: w-6 h-6 --}}
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                                <span class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                                    {{ Auth::user()->cart?->items->count() ?? 0 }}
-                                </span>
-                            </a>
-                        @endif 
+                    
 
+                    @auth
                         {{-- Dropdown Profil --}}
                         <div class="relative ml-1 sm:ml-3">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
-                                    <button class="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-full text-gray-600 bg-white hover:text-blue-600 hover:border-blue-300 focus:outline-none transition duration-150">
-                                        {{-- 1. Ikon Orang --}}
-                                        <div class="bg-gray-100 rounded-full p-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                        </div>
-                                        
-                                        {{-- 2. Nama User --}}
+                                    <button class="flex items-center gap-2 px-3 py-1.5 border border-blue-200 rounded-full text-gray-600 bg-white hover:text-blue-600 hover:border-blue-400 focus:outline-none transition duration-150">
                                         <div class="text-sm font-medium hidden sm:block max-w-[100px] truncate">
                                             {{ Auth::user()->name }}
                                         </div>
-
-                                        {{-- 3. Simbol Arah Bawah --}}
                                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
@@ -67,10 +44,29 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('dashboard')">Profil Saya</x-dropdown-link>
+                                    
+                                    {{-- LOGIKA MENU DINAMIS BERDASARKAN ROLE --}}
+                                    @if(Auth::user()->role === 'admin')
+                                        <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider font-bold">Menu</div>
+                                        <x-dropdown-link :href="route('admin.dashboard')">Dashboard Admin</x-dropdown-link>
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                    @elseif(Auth::user()->role === 'seller')
+                                        <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider font-bold">Menu</div>
+                                        <x-dropdown-link :href="route('seller.dashboard')">Dashboard Toko</x-dropdown-link>
+                                        
+                                        
+                                    @else 
+                                        {{-- BUYER / DEFAULT --}}
+                                        <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider font-bold">Menu</div>
+                                        <x-dropdown-link :href="route('dashboard')">Profil Saya</x-dropdown-link>
+                                    @endif
+                                    
+                                    <div class="border-t border-gray-100"></div>
+                                    
+                                    {{-- LOGOUT (Semua Role) --}}
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-600 font-bold">
                                             {{ __('Log Out') }}
                                         </x-dropdown-link>
                                     </form>
@@ -78,15 +74,16 @@
                             </x-dropdown>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-600 hover:text-gray-900">Masuk</a>
-                        <a href="{{ route('register') }}" class="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full transition shadow-sm">Daftar</a>
+                        {{-- Tamu --}}
+                        <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-600 hover:text-blue-600 transition">Masuk</a>
+                        <a href="{{ route('register') }}" class="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full transition shadow-sm">Daftar</a>
                     @endauth
                 </div>
             </div>
         </div>
     </nav>
-    {{-- ========================================================================================= --}}
 
+    {{-- BANNER --}}
     <div class="relative bg-blue-800 text-white py-24 md:py-32 overflow-hidden" style="background-image: url('{{ asset('images/banner.jpg') }}'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
         <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
@@ -95,6 +92,7 @@
         </div>
     </div>
 
+    {{-- FILTER & SEARCH --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-8 relative z-30">
         
         <form action="{{ route('home') }}" method="GET" class="flex flex-col md:flex-row gap-3 bg-white p-4 rounded-xl shadow-lg border border-gray-100">
@@ -173,9 +171,7 @@
         </form>
     </div>
 
-    {{-- ========================================================================================= --}}
-    {{-- BAGIAN BARU: REKOMENDASI PRODUK (POPULER/RATING TINGGI) --}}
-    {{-- ========================================================================================= --}}
+    {{-- REKOMENDASI PRODUK --}}
     @if(isset($recommendedProducts) && $recommendedProducts->isNotEmpty())
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div class="flex items-center gap-2 mb-6">
@@ -234,20 +230,21 @@
                     </div>
                 </a>
 
+                {{-- TOMBOL KERANJANG --}}
                 <div class="p-3 md:p-4 pt-0 mt-auto">
-                    <form action="{{ route('cart.add') }}" method="POST" class="flex gap-2"> 
+                    <form action="{{ route('cart.add') }}" method="POST"> 
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition">
+                        
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-700 transition shadow-sm">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                        </button>
-                        <button type="submit" class="flex-1 bg-blue-600 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-700 transition shadow-sm">
-                            Beli
+                            <span>Keranjang</span>
                         </button>
                     </form>
                 </div>
+
             </div>
             @endforeach
         </div>
@@ -255,9 +252,9 @@
         <hr class="mt-10 border-gray-200">
     </div>
     @endif
-    {{-- ========================================================================================= --}}
 
 
+    {{-- SEMUA PRODUK --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-0">
         
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -272,7 +269,7 @@
                 @foreach($categories as $cat)
                     <a href="{{ route('home', array_merge(request()->except(['category', 'page']), ['category' => $cat->id])) }}" 
                        class="inline-block px-3 py-1 border rounded-full text-sm mr-2 transition 
-                              {{ request('category') == $cat->id ? 'bg-blue-600 border-blue-600 text-white font-medium' : 'bg-white border-gray-300 text-gray-600 hover:bg-blue-50 hover:border-blue-500' }}">
+                             {{ request('category') == $cat->id ? 'bg-blue-600 border-blue-600 text-white font-medium' : 'bg-white border-gray-300 text-gray-600 hover:bg-blue-50 hover:border-blue-500' }}">
                         {{ $cat->name }}
                     </a>
                 @endforeach
@@ -330,19 +327,17 @@
                         </div>
                     </a>
 
+                    {{-- TOMBOL KERANJANG --}}
                     <div class="p-3 md:p-4 pt-0 mt-auto">
-                        <form action="{{ route('cart.add') }}" method="POST" class="flex gap-2"> 
+                        <form action="{{ route('cart.add') }}" method="POST"> 
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             
-                            <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition" title="Tambah ke Keranjang">
+                            <button type="submit" class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-700 transition shadow-sm">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
-                            </button>
-
-                            <button type="submit" class="flex-1 bg-blue-600 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-700 transition shadow-sm">
-                                Beli Sekarang
+                                <span>+ Keranjang</span>
                             </button>
                         </form>
                     </div>

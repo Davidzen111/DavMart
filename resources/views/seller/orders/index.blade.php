@@ -1,65 +1,53 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Pesanan Masuk') }}
-        </h2>
-    </x-slot>
+@extends('layouts.seller')
 
+@section('title', 'Pesanan Masuk')
+
+@section('header')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Pesanan Masuk') }}
+    </h2>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex overflow-hidden bg-white shadow-sm sm:rounded-lg min-h-screen">
+            
+            {{-- TOMBOL KEMBALI KE DASHBOARD SELLER --}}
+            <div class="mb-4 hidden md:block">
+                <a href="{{ route('seller.dashboard') }}"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium 
+                           rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none 
+                           focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Kembali ke Dashboard Seller
+                </a>
+            </div>
+
+            {{-- Header Mobile (Tombol Kembali ditambahkan di sini untuk tampilan mobile) --}}
+            <div class="md:hidden mb-6 px-4 sm:px-0 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Pesanan Masuk</h2>
+                <a href="{{ route('seller.dashboard') }}" class="text-blue-600 text-sm hover:text-blue-800">
+                    ← Kembali
+                </a>
+            </div>
+
+            {{-- CONTAINER UTAMA (Sidebar dihapus, layout disesuaikan) --}}
+            <div class="bg-white shadow-sm sm:rounded-lg min-h-screen border border-gray-100">
                 
-                <div class="w-1/4 bg-gray-50 border-r border-gray-200 p-6 hidden md:block">
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                            {{ substr(Auth::user()->store->name ?? 'S', 0, 1) }}
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-700">{{ Auth::user()->store->name ?? 'Nama Toko' }}</p>
-                            <p class="text-xs text-green-600">● Online</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-xs font-bold mb-2 text-gray-400 uppercase tracking-wider">Menu Toko</h3>
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="{{ route('seller.dashboard') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
-                                📊 Ringkasan Toko
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('seller.products.index') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
-                                🛍️ Produk Saya
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('seller.store.edit') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition text-gray-600">
-                                🏬 Pengaturan Toko
-                            </a>
-                        </li>
-                    </ul>
-
-                    <h3 class="text-xs font-bold mb-2 mt-6 text-gray-400 uppercase tracking-wider">Transaksi</h3>
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="{{ route('seller.orders.index') }}" class="block p-2 rounded hover:bg-blue-500 hover:text-white transition bg-blue-600 text-white flex justify-between items-center">
-                                <span>📦 Pesanan Masuk</span>
-                                @php
-                                    $newOrders = \App\Models\OrderItem::where('store_id', Auth::user()->store->id)->where('status', 'pending')->count();
-                                @endphp
-                                @if($newOrders > 0)
-                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{ $newOrders }}</span>
-                                @endif
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="w-full md:w-3/4 p-6">
+                {{-- KONTEN UTAMA --}}
+                <div class="w-full p-6 md:p-8">
                     
                     @if(session('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 text-sm">
                             {{ session('success') }}
+                        </div>
+                    @endif
+                    
+                    @if(session('error'))
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+                            {{ session('error') }}
                         </div>
                     @endif
 
@@ -109,7 +97,7 @@
                                                     <option value="cancelled" {{ $item->status == 'cancelled' ? 'selected' : '' }}>Batal</option>
                                                 </select>
 
-                                                <button type="submit" class="bg-blue-600 text-white p-1.5 rounded hover:bg-blue-700 transition" title="Simpan">
+                                                <button type="submit" class="bg-blue-600 text-white p-1.5 rounded hover:bg-blue-700 transition" title="Simpan Perubahan Status">
                                                     💾
                                                 </button>
                                             </form>
@@ -125,4 +113,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

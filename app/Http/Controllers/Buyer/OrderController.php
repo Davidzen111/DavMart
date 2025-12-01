@@ -12,7 +12,23 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    // 1. Proses Checkout
+    // 0. Menampilkan Halaman Checkout (Ditambahkan agar route 'checkout' bekerja)
+    public function showCheckoutPage()
+    {
+        $user = Auth::user();
+        
+        // Ambil data cart user untuk ditampilkan di halaman checkout
+        $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
+
+        // Jika tidak ada cart atau kosong, lempar balik ke cart index
+        if (!$cart || $cart->items->count() == 0) {
+            return redirect()->route('cart.index')->with('error', 'Keranjang belanja Anda kosong, silahkan pilih produk dulu.');
+        }
+
+        return view('buyer.orders.checkout', compact('cart'));
+    }
+
+    // 1. Proses Checkout (POST)
     public function checkout(Request $request)
     {
         // Validasi: Alamat Wajib Diisi
@@ -86,5 +102,37 @@ class OrderController extends Controller
                       ->findOrFail($id);
 
         return view('buyer.orders.show', compact('order'));
+    }
+
+    // 4. Batalkan Pesanan
+    public function cancel($id)
+    {
+        // 1. Cari Order milik user ini
+        $order = Order::with('items')->where('user_id', Auth::id())
+                      ->where('id', $id)
+                      ->firstOrFail();
+
+        // 2. Cek Status (Hanya boleh batal jika status 'pending')
+        if ($order->status !== 'pending') {
+            return back()->with('error', 'Pesanan tidak dapat dibatalkan karena sudah diproses.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // 3. Ubah Status jadi 'cancelled'
+            $order->update(['status' => 'cancelled']);
+
+            // 4. (PENTING) Kembalikan Stok Produk
+            foreach ($order->items as $item) {
+                $item->product->increment('stock', $item->quantity);
+            }
+
+            DB::commit();
+            return back()->with('success', 'Pesanan berhasil dibatalkan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal membatalkan pesanan.');
+        }
     }
 }

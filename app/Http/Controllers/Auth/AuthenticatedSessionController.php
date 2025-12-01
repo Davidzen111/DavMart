@@ -67,4 +67,19 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    protected function redirectTo()
+    {
+        // Cek peran pengguna
+        if (Auth::user()->role === 'admin') {
+            return route('admin.dashboard');
+        }
+
+        if (Auth::user()->role === 'seller') {
+            return route('seller.dashboard');
+        }
+
+        // Default untuk Buyer / role lain
+        return route('dashboard'); 
+    }
 }

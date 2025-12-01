@@ -57,4 +57,21 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function editAdmin(Request $request)
+{
+    // Pastikan variabel $user tersedia untuk view
+    return view('profile.edit_admin', [
+        'user' => $request->user(),
+    ]);
+}
+
+// Method untuk menampilkan form Edit Profil Khusus Seller (jika diperlukan)
+public function editSeller(Request $request)
+{
+    // Pastikan variabel $user tersedia untuk view
+    return view('profile.edit_seller', [
+        'user' => $request->user(),
+    ]);
+}
 }

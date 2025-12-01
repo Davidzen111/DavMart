@@ -14,41 +14,32 @@ class SellerController extends Controller
     {
         $user = Auth::user();
 
-        // --- LOGIKA PENGECEKAN STATUS (DIPERBAIKI) ---
-        
-        // Cek 1: Jika status masih PENDING, lempar ke halaman pending
+        // --- LOGIKA STATUS (FINAL) ---
         if ($user->status === 'pending') {
             return redirect()->route('seller.pending');
         }
 
-        // Cek 2: Jika status REJECTED, lempar ke halaman rejected
-        // (Sebelumnya ini tidak ada, makanya lari ke pending terus)
         if ($user->status === 'rejected') {
             return redirect()->route('seller.rejected');
         }
 
-        // Cek 3: Pastikan status Approved sebelum lanjut
         if ($user->status !== 'approved') {
-            // Safety net: jika status tidak jelas, logout atau ke home
             return redirect('/');
         }
 
         $store = $user->store;
 
-        // Cek Safety: Jika toko belum dibuat
         if (!$store) {
-            return redirect()->route('profile.edit')->with('error', 'Silakan lengkapi profil toko Anda.');
+            return redirect()->route('profile.edit')
+                ->with('error', 'Silakan lengkapi profil toko Anda.');
         }
 
-        // Hitung Statistik untuk ditampilkan di Dashboard
         $productsCount = $store->products()->count();
-        
-        // Hitung pesanan baru (status pending)
+
         $newOrders = OrderItem::where('store_id', $store->id)
                               ->where('status', 'pending')
                               ->count();
         
-        // Hitung Pendapatan (Hanya yang statusnya 'delivered' / selesai)
         $income = OrderItem::where('store_id', $store->id)
                             ->where('status', 'delivered')
                             ->sum('subtotal');
@@ -56,32 +47,31 @@ class SellerController extends Controller
         return view('seller.dashboard', compact('productsCount', 'newOrders', 'income'));
     }
 
-    // 2. Halaman Menunggu Persetujuan
-    public function pending() {
+    // 2. Halaman Pending
+    public function pending()
+    {
         $user = Auth::user();
 
-        // Jika sudah Approved, tendang ke dashboard
         if ($user->status === 'approved') {
             return redirect()->route('seller.dashboard');
         }
 
-        // PERBAIKAN: Jika status Ditolak (Rejected), jangan kasih lihat halaman pending
-        // Lempar ke halaman rejected
         if ($user->status === 'rejected') {
             return redirect()->route('seller.rejected');
         }
-        
+
         return view('seller.pending');
     }
 
-    // 3. Halaman Ditolak
-    public function rejected() {
+    // 3. Halaman Rejected
+    public function rejected()
+    {
         $user = Auth::user();
 
-        // Safety: Kalau user iseng buka link ini padahal statusnya Approved/Pending
         if ($user->status === 'approved') {
             return redirect()->route('seller.dashboard');
         }
+
         if ($user->status === 'pending') {
             return redirect()->route('seller.pending');
         }
@@ -89,13 +79,12 @@ class SellerController extends Controller
         return view('seller.rejected');
     }
 
-    // 4. Hapus Akun (Jika Ditolak Admin & Ingin Daftar Ulang)
+    // 4. Hapus Akun Seller
     public function destroy(Request $request)
     {
         $user = Auth::user(); 
 
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
@@ -104,29 +93,44 @@ class SellerController extends Controller
         return redirect('/')->with('success', 'Akun Anda telah dihapus. Silakan daftar kembali.');
     }
 
-    // --- FITUR BARU: PENGATURAN TOKO ---
+    // --- FITUR PENGATURAN TOKO ---
 
-    // 5. Tampilkan Form Edit Toko
+    // 5. Form Edit Toko
     public function editStore()
     {
         $store = Auth::user()->store;
         return view('seller.store.edit', compact('store'));
     }
 
-    // 6. Proses Update Toko
+    // 6. Update Informasi Toko
     public function updateStore(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $store = Auth::user()->store;
-        
-        $store->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+
+        // Update nama & deskripsi
+        $store->name = $request->name;
+        $store->description = $request->description;
+
+        // Upload gambar jika ada
+        if ($request->hasFile('image')) {
+
+            // Hapus gambar lama jika ada
+            if ($store->image && file_exists(storage_path('app/public/' . $store->image))) {
+                unlink(storage_path('app/public/' . $store->image));
+            }
+
+            // Simpan gambar baru
+            $path = $request->file('image')->store('store_images', 'public');
+            $store->image = $path;
+        }
+
+        $store->save();
 
         return back()->with('success', 'Informasi toko berhasil diperbarui!');
     }

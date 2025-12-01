@@ -1,221 +1,188 @@
-Manajemen Marketplace – Laravel E-Commerce
+Marketplace Management – Laravel E-Commerce
 
-Aplikasi Marketplace ini dikembangkan menggunakan Laravel untuk mengelola produk, pengguna, dan transaksi jual-beli dengan sistem role-based access (Admin, Seller, Buyer, dan Public User). Fitur mencakup manajemen produk, verifikasi seller, keranjang belanja, pemrosesan pesanan, rating dan review, serta pengelolaan toko dan kategori.
+Aplikasi Marketplace ini dibangun menggunakan Laravel dengan sistem role-based access: Admin, Seller, Buyer, dan Public User. Fitur mencakup manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review, serta pengaturan kategori dan toko.
 
-User Levels
+🔐 User Levels
 1. Admin
 
-Memiliki akses penuh ke seluruh platform.
+Akses penuh terhadap seluruh sistem.
 
-Memverifikasi dan mengelola akun Seller (Approve / Reject).
+Verifikasi Seller (Approve / Reject).
 
-Mengelola data pengguna (Buyer & Seller).
+Kelola pengguna (Buyer & Seller).
 
-Menghapus produk yang melanggar ketentuan.
+CRUD kategori produk.
 
-Mengelola kategori produk.
+Menghapus produk melanggar ketentuan.
 
 2. Seller
 
-Mendaftar sebagai Seller dan menunggu approval dari Admin.
+Register → menunggu approval Admin.
 
 Mengelola informasi toko (nama, deskripsi, gambar).
 
-CRUD produk sendiri: tambah, edit, hapus, kelola stok, pilih kategori.
+CRUD produk sendiri (nama, harga, stok, kategori, gambar).
 
-Melihat daftar pesanan yang masuk dan memperbarui status pesanan.
+Melihat pesanan yang masuk.
+
+Mengubah status order.
 
 3. Buyer
 
-Menambahkan produk ke keranjang belanja.
+Add to Cart dan mengelola isi cart.
 
-Mengelola isi keranjang (update jumlah, delete item).
+Checkout (membuat order baru).
 
-Checkout untuk membuat order (tanpa payment gateway).
+Melihat order history & tracking status.
 
-Melihat riwayat pesanan & tracking status.
-
-Memberikan rating dan review untuk produk.
+Memberikan rating & review pada produk.
 
 Mengelola profil akun.
 
 4. Public User (Guest)
 
-Melihat list produk dan detail produk.
+Melihat daftar produk & detail produk.
 
-Harus login sebagai Buyer untuk add to cart atau berbelanja.
+Harus login sebagai Buyer untuk Add to Cart.
 
-CMS Modules (Content Management System)
+📦 CMS Modules
 1. Product Management (Seller)
 
-List Products: Menampilkan seluruh produk yang ditambahkan Seller.
+List semua produk Seller.
 
-Create Product:
+Create Product (validasi lengkap).
 
-Field: nama, deskripsi, harga, stok, gambar, kategori.
+Edit Product (nama, deskripsi, harga, stok, kategori, gambar).
 
-Validasi ketat untuk semua field.
-
-Edit Product: Mengubah nama, deskripsi, harga, stok, gambar, kategori.
-
-Delete Product: Hanya dapat menghapus produk miliknya.
+Delete hanya produk miliknya sendiri.
 
 2. User Management (Admin)
 
-View User: Melihat daftar Admin dan Seller.
+Melihat data semua pengguna.
 
-Seller Verification:
+Verifikasi Seller berstatus Pending.
 
-Melihat Seller berstatus “Pending”.
+Edit informasi pengguna.
 
-Approve atau Reject Seller.
-
-Edit User: Mengubah data akun.
-
-Delete User: Tidak dapat menghapus dirinya sendiri.
+Delete user (kecuali dirinya sendiri).
 
 3. Cart Management (Buyer)
 
 Add to Cart.
 
-View Cart (detail, jumlah, total harga).
+View Cart (jumlah, total harga).
 
 Update quantity atau remove item.
 
-Checkout → membuat Order baru.
-
-Cart otomatis dikosongkan setelah checkout.
+Checkout → membuat Order baru & mengosongkan Cart.
 
 4. Store Management (Seller)
 
 Update informasi toko.
 
-CRUD produk.
+CRUD produk yang dimiliki Seller.
 
-5. Order Management (Core Module)
-Buyer:
+5. Order Management
+Buyer
 
-Order History: Melihat seluruh pesanan & statusnya (Menunggu Pembayaran, Diproses, Selesai).
+Melihat riwayat pesanan (Menunggu Pembayaran, Diproses, Selesai).
 
-Rating & Review: Hanya setelah pesanan selesai.
+Memberikan rating & review setelah pesanan selesai.
 
-Seller:
+Seller
 
-Incoming Orders: Pesanan yang masuk ke toko Seller.
+Melihat pesanan masuk ke toko.
 
-Update Order Status: Contoh: Menunggu Pembayaran → Diproses atau Dikirim → Selesai.
+Update status pesanan.
 
 6. Category Management (Admin)
 
 CRUD kategori produk.
 
-Kategori digunakan Seller saat menambah produk.
+🖥️ Layout Requirements
+🔸 Login/Register
 
-Layout Requirements (Front-End Flow)
-1. Login/Register Page
+Login: Admin, Seller, Buyer.
 
-Login untuk Admin, Seller, Buyer.
+Register: Buyer & Seller (Seller → Pending).
 
-Register untuk Buyer & Seller (Seller baru = status Pending).
+🔸 Homepage – Public User
 
-2. Homepage – Public User
+List produk + search bar.
 
-Menampilkan daftar produk.
+Add to Cart → redirect ke login jika belum login.
 
-Search bar.
+🔸 Homepage – Buyer
 
-Tombol Add to Cart → redirect ke login jika belum login.
-
-3. Homepage – Buyer
-
-Menampilkan produk rekomendasi acak.
+Produk rekomendasi acak.
 
 Add to Cart aktif.
 
-Search bar.
+🔸 Product List Page
 
-4. Product List Page
+Katalog lengkap berisi gambar, nama, dan harga.
 
-Menampilkan katalog lengkap: gambar, nama, harga.
+🔸 Product Detail Page
 
-5. Product Detail Page
-
-Menampilkan detail lengkap: nama, harga, deskripsi, kategori, dan toko.
-
-Add to Cart (Buyer).
+Detail lengkap: nama, harga, deskripsi, kategori, toko.
 
 Rating & review.
 
-Guest hanya bisa lihat, tidak bisa add to cart.
+Add to Cart (Buyer).
 
-6. Buyer Dashboard
+🔸 Buyer Dashboard
 
-Profile Management
+Profile Management.
 
-Shopping Cart
+Shopping Cart.
 
-Order History & Tracking
+Order History & Tracking.
 
-7. Seller Dashboard
+🔸 Seller Dashboard
 
-Store Management
+Store Management.
 
-Product CRUD
+Product CRUD.
 
-Incoming Orders + Update Status
+Order Management.
 
-8. Pending Seller Page
+🔸 Pending Seller Page
 
-Teks: “Akun Anda sedang ditinjau”.
+Pesan: “Akun Anda sedang ditinjau.”
 
-Jika status “Rejected” → muncul tombol Delete Account.
+Jika status Rejected → muncul tombol Delete Account.
 
-9. Admin Dashboard
+🔸 Admin Dashboard
 
-User Management
+User Management.
 
-Seller Verification
+Seller Verification.
 
-Category Management
+Category Management.
 
-Advanced Requirements (Optional / Upgrade)
+🚀 Advanced Features (Optional Upgrades)
 
-Filter dan Sorting Produk (kategori, harga, terbaru).
+Filter & Sorting Produk (kategori, harga).
 
-Alamat Pengiriman Buyer
+Manajemen alamat pengiriman Buyer.
 
-Wishlist System
-Buyer dapat menyimpan produk ke daftar favorit.
+Wishlist / Favorite System.
 
-Teknologi yang Digunakan
-
-XAMPP – Apache, PHP, MySQL
-
-Composer – Dependency Laravel
-
-Laravel – Backend utama
-
-VS Code – Code editor
-
-GitHub – Version control & repo management
-
-Node.js & NPM – Mengelola frontend via Vite
-
-Installation Guide
+⚙️ Instalasi & Setup
 1. Clone Repository
 git clone https://github.com/Mirnafebriasari/Manajemen-Perpustakaan.git
 
-2. Masuk Direktori Project
+2. Masuk Folder Project
 cd Manajemen-Perpustakaan
 
 3. Install Dependensi Laravel
 composer install
 
-4. Konfigurasi File .env
+4. Setup File .env
 
-Jika belum ada, ubah .env.example menjadi .env.
+Jika hanya ada .env.example, rename jadi .env.
 
-Lalu isi:
+Isi konfigurasi database:
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -224,8 +191,8 @@ DB_DATABASE=perpustakaan_db
 DB_USERNAME=root
 DB_PASSWORD=
 
-5. Start MySQL di XAMPP
-6. Migrasi dan Seeder Database
+5. Aktifkan MySQL di XAMPP
+6. Migrasi & Seeder
 php artisan migrate --seed
 
 7. Jalankan Server Laravel
@@ -243,21 +210,21 @@ php artisan key:generate
 11. Buat Storage Link
 php artisan storage:link
 
-Akses Aplikasi:
+Akses Aplikasi
 
 http://127.0.0.1:8000/
 
-Akses Akun
-1. Admin
+🔑 Akses Akun
+Admin
 
-Tersedia melalui file:
+Data tersedia di:
 
 database/seeders/AdminSeeder.php
 
-2. Buyer
+Buyer
 
-Dapat registrasi langsung melalui halaman Register.
+Dapat register langsung.
 
-3. Seller
+Seller
 
 Register → status Pending → menunggu approval Admin.

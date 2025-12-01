@@ -13,7 +13,7 @@ Kelola pengguna (Buyer & Seller).
 
 CRUD kategori produk.
 
-Menghapus produk melanggar ketentuan.
+Menghapus produk yang melanggar ketentuan.
 
 2. Seller
 
@@ -35,7 +35,7 @@ Checkout (membuat order baru).
 
 Melihat order history & tracking status.
 
-Memberikan rating & review pada produk.
+Memberikan rating & review produk.
 
 Mengelola profil akun.
 
@@ -74,13 +74,13 @@ View Cart (jumlah, total harga).
 
 Update quantity atau remove item.
 
-Checkout → membuat Order baru & mengosongkan Cart.
+Checkout → Order dibuat & Cart dikosongkan.
 
 4. Store Management (Seller)
 
 Update informasi toko.
 
-CRUD produk yang dimiliki Seller.
+CRUD produk miliknya.
 
 5. Order Management
 Buyer
@@ -110,7 +110,7 @@ Register: Buyer & Seller (Seller → Pending).
 
 List produk + search bar.
 
-Add to Cart → redirect ke login jika belum login.
+Add to Cart → redirect ke login.
 
 🔸 Homepage – Buyer
 
@@ -120,11 +120,11 @@ Add to Cart aktif.
 
 🔸 Product List Page
 
-Katalog lengkap berisi gambar, nama, dan harga.
+Katalog produk (gambar, nama, harga).
 
 🔸 Product Detail Page
 
-Detail lengkap: nama, harga, deskripsi, kategori, toko.
+Detail produk lengkap (nama, harga, deskripsi, kategori, toko).
 
 Rating & review.
 
@@ -150,7 +150,7 @@ Order Management.
 
 Pesan: “Akun Anda sedang ditinjau.”
 
-Jika status Rejected → muncul tombol Delete Account.
+Jika Rejected → tombol Delete Account muncul.
 
 🔸 Admin Dashboard
 
@@ -162,7 +162,7 @@ Category Management.
 
 🚀 Advanced Features (Optional Upgrades)
 
-Filter & Sorting Produk (kategori, harga).
+Filter & sorting produk (kategori, harga).
 
 Manajemen alamat pengiriman Buyer.
 
@@ -217,13 +217,13 @@ http://127.0.0.1:8000/
 🔑 Akses Akun
 Admin
 
-Data tersedia di:
+Cek file:
 
 database/seeders/AdminSeeder.php
 
 Buyer
 
-Dapat register langsung.
+Daftar langsung melalui halaman register.
 
 Seller
 

@@ -1,7 +1,3 @@
-Siap, ini **versi yang sudah dihias**, rapi, dan **langsung cantik saat dicopy ke WhatsApp, Telegram, atau dokumen biasa**.
-Aku pake **pagar (#), bullet (*), dan tanda lainnya** biar tetap tampil *clean* meski platform beda-beda.
-
----
 
 # 📘 **Marketplace Management – Laravel E-Commerce**
 

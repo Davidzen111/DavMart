@@ -1,242 +1,59 @@
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-# 📘 **Marketplace Management – Laravel E-Commerce**
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Aplikasi Marketplace ini dibangun menggunakan Laravel dengan sistem **role-based access**: *Admin, Seller, Buyer, dan Public User*.
-Fitur mencakup **manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review**, serta **pengaturan kategori & toko**.
+## About Laravel
 
----
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-# 🔐 **User Levels**
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-## **1. Admin**
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-* Akses penuh sistem
-* Verifikasi Seller (Approve / Reject)
-* Kelola semua user
-* CRUD kategori produk
-* Menghapus produk bermasalah
+## Learning Laravel
 
-## **2. Seller**
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-* Register → menunggu approval Admin
-* Kelola informasi toko
-* CRUD produk sendiri
-* Melihat pesanan masuk
-* Update status pesanan
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## **3. Buyer**
+## Laravel Sponsors
 
-* Add to Cart
-* Checkout (buat order)
-* Order history & tracking
-* Rating & review produk
-* Kelola profil
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-## **4. Public User (Guest)**
+### Premium Partners
 
-* Lihat daftar produk & detail
-* Add to Cart hanya saat login Buyer
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
----
+## Contributing
 
-# 📦 **CMS Modules**
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## **1. Product Management (Seller)**
+## Code of Conduct
 
-* List produk seller
-* Create / Edit / Delete produk
-* Validasi lengkap
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## **2. User Management (Admin)**
+## Security Vulnerabilities
 
-* Melihat semua user
-* Verifikasi seller pending
-* Edit & delete user
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## **3. Cart Management (Buyer)**
+## License
 
-* Add to Cart
-* View Cart & update quantity
-* Remove item
-* Checkout → Cart dikosongkan
-
-## **4. Store Management (Seller)**
-
-* Update info toko
-* CRUD produk toko
-
-## **5. Order Management**
-
-### Buyer:
-
-* Riwayat pesanan (Menunggu, Diproses, Selesai)
-* Rating & review
-
-### Seller:
-
-* Melihat pesanan masuk
-* Update status pesanan
-
-## **6. Category Management (Admin)**
-
-* CRUD kategori
-
----
-
-# 🖥️ **Layout Requirements**
-
-## 🔸 **Login / Register**
-
-* Login: Admin, Seller, Buyer
-* Register: Buyer & Seller (Seller → Pending)
-
-## 🔸 **Homepage – Public**
-
-* List produk + search
-* Add to Cart → redirect login
-
-## 🔸 **Homepage – Buyer**
-
-* Produk rekomendasi acak
-* Add to Cart aktif
-
-## 🔸 **Product List Page**
-
-* Katalog lengkap (gambar, nama, harga)
-
-## 🔸 **Product Detail Page**
-
-* Detail lengkap
-* Rating & review
-* Add to Cart (Buyer)
-
-## 🔸 **Buyer Dashboard**
-
-* Profile
-* Shopping Cart
-* Order History
-
-## 🔸 **Seller Dashboard**
-
-* Store Management
-* Product CRUD
-* Order Management
-
-## 🔸 **Pending Seller Page**
-
-* Pesan “Akun Anda sedang ditinjau”
-* Jika Rejected → tombol Delete Account
-
-## 🔸 **Admin Dashboard**
-
-* User Management
-* Seller Verification
-* Category Management
-
----
-
-# 🚀 **Advanced Features (Optional)**
-
-* Filter & sorting produk
-* Wishlist
-* Manajemen alamat buyer
-
----
-
-# ⚙️ **Instalasi & Setup**
-
-## **1. Clone Repository**
-
-```
-git clone https://github.com/Mirnafebriasari/Manajemen-Perpustakaan.git
-```
-
-## **2. Masuk Folder Project**
-
-```
-cd Manajemen-Perpustakaan
-```
-
-## **3. Install Dependensi Laravel**
-
-```
-composer install
-```
-
-## **4. Setup .env**
-
-Rename `.env.example` → `.env` lalu isi database:
-
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=perpustakaan_db
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-## **5. Aktifkan MySQL**
-
-## **6. Migrasi & Seeder**
-
-```
-php artisan migrate --seed
-```
-
-## **7. Jalankan Server**
-
-```
-php artisan serve
-```
-
-## **8. Install Dependencies Frontend**
-
-```
-npm install
-```
-
-## **9. Jalankan Vite**
-
-```
-npm run dev
-```
-
-## **10. Generate Key**
-
-```
-php artisan key:generate
-```
-
-## **11. Storage Link**
-
-```
-php artisan storage:link
-```
-
----
-
-# 🌐 **Akses Aplikasi**
-
-[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-
----
-
-# 🔑 **Akun Default**
-
-### **Admin**
-
-Tersedia di:
-`database/seeders/AdminSeeder.php`
-
-### **Buyer**
-
-Register langsung
-
-### **Seller**
-
-Register → status *Pending* → menunggu approval Admin
-
----
-
-Kalau mau versi **lebih minimalis**, **lebih mewah**, atau **versi khusus untuk PDF/PowerPoint**, tinggal bilang saja!
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

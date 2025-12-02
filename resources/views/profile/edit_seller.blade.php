@@ -1,40 +1,41 @@
-@extends('layouts.seller') 
+@extends('layouts.seller')
 
 @section('title', 'Pengaturan Akun Seller - DavMart')
 
 @section('content')
-
-    {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS (Diletakkan di dalam Content) --}}
+<div class="py-8 bg-slate-50 min-h-screen">
+    
+    {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS --}}
     @auth
         @php
             // Menentukan rute kembali (Seller saja, karena ini layout seller)
             $backRoute = route('seller.dashboard');
             $ariaLabel = 'Kembali ke Dashboard Toko';
+            $user = Auth::user();
         @endphp
     @endauth
 
-    {{-- HEADER HALAMAN KUSTOM (Tombol Kembali Dinamis) --}}
-    <div class="mb-8 flex items-center gap-4 pt-8"> {{-- Tambahkan pt-8 jika perlu padding atas --}}
-        {{-- Tombol Kembali Dinamis --}}
-        <a href="{{ $backRoute ?? route('seller.dashboard') }}" 
-           class="group flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 ease-in-out shadow-sm"
-           aria-label="{{ $ariaLabel ?? 'Kembali' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-0.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-        </a>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-        <h1 class="text-3xl font-bold text-gray-800 leading-tight">Pengaturan Akun</h1>
-    </div>
+        {{-- HEADER HALAMAN KUSTOM (Tombol Kembali Dinamis) --}}
+        <div class="mb-6 flex items-center gap-4">
+            {{-- Tombol Kembali Dinamis (Ikon Bulat Konsisten) --}}
+            <a href="{{ $backRoute ?? '#' }}" 
+                class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200 ease-in-out shadow-md"
+                aria-label="{{ $ariaLabel ?? 'Kembali' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-0.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </a>
 
-    {{-- WRAPPER KONTEN (Dibatasi lebarnya agar rapih untuk form) --}}
-    <div class="max-w-3xl mx-auto space-y-6">
-        
+            <h1 class="text-2xl font-bold text-slate-800 leading-tight">Pengaturan Akun Seller ⚙️</h1>
+        </div>
+
         {{-- 1. Form Informasi Profil --}}
-        <div class="p-6 bg-white shadow-sm sm:rounded-xl border border-gray-100">
-            <header>
-                <h2 class="text-lg font-bold text-gray-800">Informasi Profil</h2>
-                <p class="mt-1 text-sm text-gray-500">Perbarui informasi profil akun dan alamat email Anda.</p>
+        <div class="p-8 bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100">
+            <header class="mb-6 border-b border-slate-100 pb-4">
+                <h2 class="text-xl font-bold text-slate-800">Informasi Profil</h2>
+                <p class="mt-1 text-sm text-slate-500">Perbarui informasi profil akun dan alamat email Anda.</p>
             </header>
 
             <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
@@ -42,23 +43,29 @@
                 @method('patch')
 
                 <div>
-                    <label for="name" class="block font-medium text-sm text-gray-700">{{ __('Nama Lengkap') }}</label>
-                    <input id="name" name="name" type="text" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
+                    <label for="name" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Nama Lengkap') }}</label>
+                    <input id="name" name="name" type="text" 
+                        class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-lg shadow-sm text-slate-800" 
+                        value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
                     @error('name')
                         <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="email" class="block font-medium text-sm text-gray-700">{{ __('Email') }}</label>
-                    <input id="email" name="email" type="email" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" value="{{ old('email', $user->email) }}" required autocomplete="username" />
+                    <label for="email" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Email') }}</label>
+                    <input id="email" name="email" type="email" 
+                        class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-lg shadow-sm text-slate-800" 
+                        value="{{ old('email', $user->email) }}" required autocomplete="username" />
                     @error('email')
                         <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow-md hover:shadow-lg">
+                <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
+                    <button type="submit" 
+                        {{-- WARNA AKSI UTAMA DIUBAH KE AMBER --}}
+                        class="inline-flex items-center justify-center bg-amber-600 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-amber-700 transition shadow-lg shadow-amber-400/50 transform hover:-translate-y-0.5">
                         Simpan Perubahan
                     </button>
 
@@ -73,10 +80,10 @@
         </div>
 
         {{-- 2. Form Ganti Password --}}
-        <div class="p-6 bg-white shadow-sm sm:rounded-xl border border-gray-100">
-            <header>
-                <h2 class="text-lg font-bold text-gray-800">Ganti Kata Sandi</h2>
-                <p class="mt-1 text-sm text-gray-500">Pastikan akun Anda aman dengan menggunakan kata sandi yang kuat.</p>
+        <div class="p-8 bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100">
+            <header class="mb-6 border-b border-slate-100 pb-4">
+                <h2 class="text-xl font-bold text-slate-800">Ganti Kata Sandi</h2>
+                <p class="mt-1 text-sm text-slate-500">Pastikan akun Anda aman dengan menggunakan kata sandi yang kuat.</p>
             </header>
 
             <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
@@ -84,31 +91,39 @@
                 @method('put')
 
                 <div>
-                    <label for="current_password" class="block font-medium text-sm text-gray-700">{{ __('Kata Sandi Saat Ini') }}</label>
-                    <input id="current_password" name="current_password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="current-password" />
+                    <label for="current_password" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Kata Sandi Saat Ini') }}</label>
+                    <input id="current_password" name="current_password" type="password" 
+                        class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-lg shadow-sm text-slate-800" 
+                        autocomplete="current-password" />
                     @error('current_password', 'updatePassword')
                         <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="password" class="block font-medium text-sm text-gray-700">{{ __('Kata Sandi Baru') }}</label>
-                    <input id="password" name="password" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
+                    <label for="password" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Kata Sandi Baru') }}</label>
+                    <input id="password" name="password" type="password" 
+                        class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-lg shadow-sm text-slate-800" 
+                        autocomplete="new-password" />
                     @error('password', 'updatePassword')
                         <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="password_confirmation" class="block font-medium text-sm text-gray-700">{{ __('Konfirmasi Kata Sandi Baru') }}</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm" autocomplete="new-password" />
+                    <label for="password_confirmation" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Konfirmasi Kata Sandi Baru') }}</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" 
+                        class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-lg shadow-sm text-slate-800" 
+                        autocomplete="new-password" />
                     @error('password_confirmation', 'updatePassword')
                         <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <button type="submit" class="bg-gray-800 text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-900 transition shadow-md hover:shadow-lg">
+                <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
+                    <button type="submit" 
+                        {{-- WARNA AKSI UTAMA DIUBAH KE SLATE-900 (Konsisten dengan tombol utama Dashboard) --}}
+                        class="inline-flex items-center justify-center bg-slate-900 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-slate-800 transition shadow-lg shadow-slate-400/50 transform hover:-translate-y-0.5">
                         Update Password
                     </button>
 
@@ -123,40 +138,52 @@
         </div>
 
         {{-- 3. Hapus Akun --}}
-        <div class="p-6 bg-white shadow-sm sm:rounded-xl border border-red-100">
-            <header>
-                <h2 class="text-lg font-bold text-red-600">Hapus Akun</h2>
-                <p class="mt-1 text-sm text-gray-500">Setelah akun dihapus, semua data dan riwayat pesanan akan hilang permanen.</p>
+        <div class="p-8 bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-red-200/80">
+            <header class="mb-6 border-b border-red-100 pb-4">
+                <h2 class="text-xl font-bold text-red-600">Hapus Akun</h2>
+                <p class="mt-1 text-sm text-slate-500">Setelah akun dihapus, semua data dan riwayat pesanan akan hilang permanen.</p>
             </header>
 
             <div class="mt-6">
-                <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')" class="bg-red-50 text-red-600 border border-red-200 px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition shadow-sm">
+                <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')" 
+                    class="inline-flex items-center justify-center bg-red-50 text-red-600 border border-red-300 px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-red-600 hover:text-white transition shadow-sm">
                     Hapus Akun Saya
                 </button>
             </div>
 
-            {{-- Modal Konfirmasi Hapus --}}
+            {{-- Modal Konfirmasi Hapus (Pastikan input di modal juga konsisten) --}}
             <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
                 <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
                     @csrf
                     @method('delete')
-                    <h2 class="text-lg font-bold text-gray-900">Apakah Anda yakin ingin menghapus akun?</h2>
-                    <p class="mt-1 text-sm text-gray-600">Akun yang dihapus tidak dapat dikembalikan. Silakan masukkan password Anda untuk konfirmasi.</p>
+                    <h2 class="text-xl font-bold text-slate-900">Apakah Anda yakin ingin menghapus akun?</h2>
+                    <p class="mt-2 text-sm text-slate-600">Akun yang dihapus tidak dapat dikembalikan. Silakan masukkan password Anda untuk konfirmasi.</p>
+                    
                     <div class="mt-6">
                         <label for="password" class="sr-only">Password</label>
-                        <input id="password" name="password" type="password" class="mt-1 block w-3/4 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg" placeholder="Password Anda"/>
+                        <input id="password" name="password" type="password" 
+                            class="mt-1 block w-full border-slate-300 focus:border-red-500 focus:ring-red-500 rounded-lg"
+                            placeholder="Password Anda"
+                        />
                         @error('password', 'userDeletion')
                             <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                         @enderror
                     </div>
+                    
                     <div class="mt-6 flex justify-end gap-3">
-                        <x-secondary-button x-on:click="$dispatch('close')">Batal</x-secondary-button>
-                        <x-danger-button>Hapus Akun</x-danger-button>
+                        <x-secondary-button x-on:click="$dispatch('close')" 
+                            class="border border-slate-300 bg-white hover:bg-slate-50 text-slate-600 font-semibold rounded-lg shadow-sm">
+                            Batal
+                        </x-secondary-button>
+                        <x-danger-button 
+                            class="bg-red-600 text-white hover:bg-red-700 font-bold rounded-lg shadow-sm">
+                            Hapus Akun
+                        </x-danger-button>
                     </div>
                 </form>
             </x-modal>
         </div>
 
     </div>
-
+</div>
 @endsection

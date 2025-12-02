@@ -61,7 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reviews/create/{productId}/{orderId}', [ReviewController::class, 'create'])->name('reviews.create');
         Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
-        // Fitur Wishlist (Love)
+        // Fitur Wishlist (Love) - SUDAH TERSEDIA
         Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
         Route::post('/wishlist/{productId}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     });
@@ -77,7 +77,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/account-destroy', [SellerController::class, 'destroy'])->name('account.destroy');
         
         // TAMBAHAN: Route Edit Profil untuk Seller
-        // Url: /seller/profile/edit -> Name: seller.profile.edit
         Route::get('/profile/edit', [ProfileController::class, 'editSeller'])->name('profile.edit'); 
     });
 
@@ -124,7 +123,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/products/{id}', [\App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('products.destroy');
         
         // TAMBAHAN: Route Edit Profil untuk Admin
-        // Url: /admin/profile/edit -> Name: admin.profile.edit
         Route::get('/profile/edit', [ProfileController::class, 'editAdmin'])->name('profile.edit'); 
     });
 
@@ -132,7 +130,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // PROFILE ROUTES (Bawaan Breeze/Umum)
     // ==========================================
     // *Route ini tetap ada untuk Buyer dan sebagai fallback/handler form
-    // Url: /profile -> Name: profile.edit (Tanpa prefix)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

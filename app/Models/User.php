@@ -22,8 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',    
-        'status',  
-        'phone',   
+        'status',    
+        'phone',    
         'address',
     ];
 
@@ -44,6 +44,13 @@ class User extends Authenticatable
     // Relasi ke Alamat (Buyer)
     public function addresses() {
         return $this->hasMany(UserAddress::class);
+    }
+
+    // Relasi ke Wishlist (Buyer) - DITAMBAHKAN
+    public function wishlists() 
+    {
+        // Asumsi model Wishlist dibuat, yang menghubungkan User ke Product
+        return $this->hasMany(Wishlist::class); 
     }
 
     /**

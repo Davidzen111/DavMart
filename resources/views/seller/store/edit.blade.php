@@ -3,44 +3,44 @@
 @section('title', 'Pengaturan Toko')
 
 @section('header')
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <h2 class="font-bold text-xl text-slate-800 leading-tight">
         {{ __('Pengaturan Toko') }}
     </h2>
 @endsection
 
 @section('content')
-    <div class="py-12">
+    <div class="py-8 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- TOMBOL KEMBALI KE DASHBOARD SELLER --}}
-            <div class="mb-4">
+            {{-- TOMBOL KEMBALI KE DASHBOARD SELLER (Hanya Simbol, Desain Konsisten) --}}
+            <div class="mb-6">
                 <a href="{{ route('seller.dashboard') }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium 
-                           rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none 
-                           focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    {{-- Menggunakan class yang konsisten dengan tombol navigasi bulat elegan --}}
+                    class="inline-flex items-center justify-center w-10 h-10 p-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md"
+                    title="Kembali ke Dashboard">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Kembali ke Dashboard Seller
                 </a>
             </div>
 
-            <div class="overflow-hidden bg-white shadow-lg sm:rounded-xl min-h-screen">
+            {{-- CARD UTAMA PENGATURAN (Design Konsisten: shadow-xl, rounded-2xl) --}}
+            <div class="overflow-hidden bg-white shadow-xl shadow-slate-200/50 sm:rounded-2xl border border-slate-100">
                 
-                <div class="w-full p-8">
+                <div class="w-full p-8 md:p-10">
 
-                    {{-- ALERT SUCCESS --}}
+                    {{-- ALERT SUCCESS (Design Konsisten: bg-green-50, rounded-lg) --}}
                     @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 text-sm">
-                            {{ session('success') }}
+                        <div class="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm shadow-sm">
+                            Berhasil! {{ session('success') }}
                         </div>
                     @endif
 
-                    {{-- ALERT ERROR --}}
+                    {{-- ALERT ERROR (Design Konsisten: bg-red-50, rounded-lg) --}}
                     @if ($errors->any())
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+                        <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm shadow-sm">
                             <p class="font-bold">Terjadi Kesalahan Saat Menyimpan Data:</p>
-                            <ul class="list-disc ml-5 mt-1">
+                            <ul class="list-disc ml-5 mt-1 list-inside">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
@@ -49,6 +49,7 @@
                     @endif
 
                     @php
+                        // Memastikan variabel $store tersedia
                         $store = $store ?? Auth::user()->store ?? (object)[
                             'name' => '',
                             'description' => '',
@@ -57,67 +58,75 @@
                     @endphp
 
                     <div class="max-w-2xl">
-                        <h3 class="text-xl font-bold text-gray-800 mb-1 border-b pb-2">Pengaturan Informasi Toko Anda</h3>
-                        <p class="text-gray-500 text-sm mb-6">Perbarui nama, deskripsi, dan gambar (logo) toko Anda.</p>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Informasi Dasar Toko </h3>
+                        <p class="text-slate-500 text-sm mb-8">Perbarui nama, deskripsi, dan logo toko Anda.</p>
 
                         <form action="{{ route('seller.store.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
 
-                            {{-- NAMA TOKO --}}
-                            <div class="mb-4">
-                                <label for="store_name" class="block text-gray-700 font-bold mb-2">Nama Toko</label>
+                            {{-- NAMA TOKO (Input Konsisten) --}}
+                            <div class="mb-6">
+                                <label for="store_name" class="block text-slate-700 font-semibold mb-2 text-sm">Nama Toko</label>
                                 <input type="text" id="store_name" name="name"
                                             value="{{ old('name', $store->name) }}"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 
-                                            focus:ring-blue-500 @error('name') border-red-500 @enderror"
+                                            class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-slate-800 
+                                            focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition 
+                                            @error('name') border-red-500 @enderror"
                                             required>
                                 @error('name')
                                     <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            {{-- DESKRIPSI TOKO --}}
-                            <div class="mb-4">
-                                <label for="store_description" class="block text-gray-700 font-bold mb-2">Deskripsi Toko</label>
+                            {{-- DESKRIPSI TOKO (Input Konsisten) --}}
+                            <div class="mb-6">
+                                <label for="store_description" class="block text-slate-700 font-semibold mb-2 text-sm">Deskripsi Toko</label>
                                 <textarea id="store_description" name="description" rows="4"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none 
-                                            focus:ring-2 focus:ring-blue-500 @error('description') border-red-500 @enderror">{{ old('description', $store->description) }}</textarea>
-                                <p class="text-xs text-gray-500 mt-1">Ceritakan sedikit tentang apa yang Anda jual.</p>
+                                            class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-slate-800 
+                                            focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition 
+                                            @error('description') border-red-500 @enderror">{{ old('description', $store->description) }}</textarea>
+                                <p class="text-xs text-slate-500 mt-1">Ceritakan sedikit tentang apa yang Anda jual.</p>
                                 @error('description')
                                     <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            {{-- GAMBAR TOKO --}}
-                            <div class="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                                <label for="store_image" class="block text-gray-700 font-bold mb-3">Gambar Toko (Logo)</label>
+                            {{-- GAMBAR TOKO (Design Konsisten) --}}
+                            <div class="mb-8 p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-inner">
+                                <label for="store_image" class="block text-slate-700 font-semibold mb-4 text-sm">Gambar Toko (Logo)</label>
 
-                                {{-- GAMBAR SAAT INI --}}
-                                @if($store->image)
-                                    <div class="mb-3">
-                                        <p class="text-xs text-gray-500 mb-1">Gambar saat ini:</p>
-                                        <img id="currentImage"
+                                {{-- GAMBAR SAAT INI & PREVIEW --}}
+                                <div class="flex items-end gap-6 mb-4">
+                                    {{-- Gambar Saat Ini --}}
+                                    <div id="currentImageContainer" @if(!$store->image) class="hidden" @endif>
+                                        @if($store->image)
+                                            <p class="text-xs text-slate-500 mb-1">Gambar saat ini:</p>
+                                            <img id="currentImage"
                                                     src="{{ asset('storage/' . $store->image) }}"
                                                     class="w-20 h-20 object-cover rounded-full border-4 border-white shadow-md"
                                                     alt="Logo Toko">
+                                        @endif
                                     </div>
-                                @endif
 
-                                {{-- PREVIEW GAMBAR BARU --}}
-                                <div>
-                                    <img id="previewImage" 
-                                            class="hidden w-20 h-20 object-cover rounded-full border-2 border-blue-300 mb-3 shadow">
+                                    {{-- PREVIEW GAMBAR BARU --}}
+                                    <div id="previewContainer" class="hidden"> 
+                                        <p id="previewLabel" class="text-xs text-blue-600 mb-1">Preview baru:</p>
+                                        <img id="previewImage" 
+                                                    class="hidden w-20 h-20 object-cover rounded-full border-4 border-blue-400 shadow-lg"
+                                                    alt="Preview Logo">
+                                    </div>
                                 </div>
+                                
 
-                                {{-- INPUT GAMBAR --}}
+                                {{-- INPUT GAMBAR (Design Konsisten) --}}
                                 <input type="file" id="store_image" name="image"
-                                            class="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                                            class="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full 
                                             file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
                                             hover:file:bg-blue-100 transition duration-300 @error('image') border-red-500 @enderror"
                                             accept="image/*" onchange="previewLogo(event)">
 
-                                <p class="text-xs text-gray-500 mt-2">
+                                <p class="text-xs text-slate-500 mt-2">
                                     Unggah logo baru (Maks: 2MB). Kosongkan jika tidak ingin mengubah.
                                 </p>
 
@@ -126,10 +135,11 @@
                                 @enderror
                             </div>
 
-                            {{-- TOMBOL SIMPAN --}}
+                            {{-- TOMBOL SIMPAN (Design Konsisten: rounded-xl, shadow-lg blue) --}}
                             <button type="submit"
-                                        class="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700 
-                                        transition shadow-md">
+                                            class="inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-3 px-8 rounded-xl hover:bg-blue-700 
+                                            transition shadow-lg shadow-blue-500/30 transform hover:-translate-y-0.5">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-4 0V4a2 2 0 00-2-2l-3 4-2 2"></path></svg>
                                 Simpan Perubahan
                             </button>
 
@@ -143,15 +153,37 @@
         </div>
     </div>
 
-    {{-- SCRIPT PREVIEW GAMBAR --}}
+    {{-- SCRIPT PREVIEW GAMBAR (Diperbaiki) --}}
     <script>
         function previewLogo(event) {
             const file = event.target.files[0];
+            const currentImageContainer = document.getElementById('currentImageContainer');
+            const previewContainer = document.getElementById('previewContainer');
             const preview = document.getElementById('previewImage');
+            const previewLabel = document.getElementById('previewLabel');
 
             if (file) {
+                // Menampilkan preview baru
                 preview.src = URL.createObjectURL(file);
                 preview.classList.remove('hidden');
+                previewContainer.classList.remove('hidden');
+                previewLabel.classList.remove('hidden');
+
+                // Menyembunyikan kontainer gambar lama (jika ada)
+                if (currentImageContainer) {
+                    currentImageContainer.classList.add('hidden'); 
+                }
+
+            } else {
+                // Sembunyikan preview jika file dibatalkan/dihapus
+                preview.classList.add('hidden');
+                previewContainer.classList.add('hidden');
+                previewLabel.classList.add('hidden');
+
+                // Menampilkan kembali kontainer gambar lama (jika ada isinya)
+                if (currentImageContainer && currentImageContainer.querySelector('img')) {
+                    currentImageContainer.classList.remove('hidden'); 
+                }
             }
         }
     </script>

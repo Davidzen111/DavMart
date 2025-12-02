@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth; // <-- DITAMBAHKAN: Diperlukan untuk Auth::check() dan Auth::user()
 
 class HomeController extends Controller
 {
@@ -66,7 +67,6 @@ class HomeController extends Controller
         }
         
         // --- LOGIKA SORTING ---
-        // (Berlaku untuk list "Semua Produk", bukan rekomendasi)
         
         if ($request->filled('sort')) {
             if ($request->sort == 'price_asc') { // Saya sesuaikan value dengan view blade sebelumnya (price_asc)
@@ -77,7 +77,7 @@ class HomeController extends Controller
             // Tambahan jika filter rating dipilih di "Filter Lanjut"
             elseif ($request->filled('rating')) {
                  $query->withAvg('reviews', 'rating')
-                       ->having('reviews_avg_rating', '>=', $request->rating);
+                        ->having('reviews_avg_rating', '>=', $request->rating);
             }
         } else {
             // Default sorting: Terbaru
@@ -94,8 +94,6 @@ class HomeController extends Controller
         return view('welcome', compact('products', 'categories', 'recommendedProducts'));
     }
 
-    
-
     // 2. Halaman Detail Produk
     public function show($id)
     {
@@ -107,6 +105,18 @@ class HomeController extends Controller
         $ratingAvg = $product->reviews->avg('rating');
         $ratingCount = $product->reviews->count();
 
-        return view('product_detail', compact('product', 'ratingAvg', 'ratingCount'));
+        // ----------------------------------------------------
+        // LOGIKA WISHILIST (UNTUK STATUS TOMBOL MERAH)
+        // ----------------------------------------------------
+        $isWishlisted = false;
+        
+        if (Auth::check()) {
+            // Memeriksa apakah user yang sedang login sudah memfavoritkan produk ini
+            // Asumsi Model User memiliki relasi wishlists()
+            $isWishlisted = Auth::user()->wishlists()->where('product_id', $product->id)->exists();
+        }
+        
+        // Mengirimkan semua data yang diperlukan ke view
+        return view('product_detail', compact('product', 'ratingAvg', 'ratingCount', 'isWishlisted')); // <-- $isWishlisted DITAMBAHKAN
     }
 }

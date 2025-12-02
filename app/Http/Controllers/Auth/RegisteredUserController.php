@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
+// use App\Providers\RouteServiceProvider; // <-- DIHAPUS karena Laravel 12 tidak punya file ini
 
 class RegisteredUserController extends Controller
 {
@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:buyer,seller'], // Validasi input Role dari form
         ]);
@@ -56,7 +56,7 @@ class RegisteredUserController extends Controller
             // Jika Seller: Buatkan Toko Otomatis
             Store::create([
                 'user_id' => $user->id,
-                'name' => 'Toko ' . $request->name, 
+                'name' => 'Toko ' . $request->name,
                 'slug' => \Illuminate\Support\Str::slug('Toko ' . $request->name . '-' . $user->id),
                 'description' => 'Deskripsi toko belum diatur.',
             ]);
@@ -70,17 +70,13 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-        
-        // --- PESAN SELAMAT DIHAPUS ---
-        // $request->session()->flash('register_success', true); // Baris ini dihapus/dihilangkan
 
-        // 4. Redirect (Pengalihan Halaman)
+
         if ($user->role === 'seller') {
-            // Seller baru pasti pending -> Arahkan ke halaman pending
             return redirect()->route('seller.pending');
         }
 
-        // Buyer -> Arahkan ke dashboard utama
-        return redirect(RouteServiceProvider::HOME); 
+        // Buyer -> Dashboard utama
+        return redirect()->route('dashboard'); // <-- PERBAIKAN DI SINI
     }
 }

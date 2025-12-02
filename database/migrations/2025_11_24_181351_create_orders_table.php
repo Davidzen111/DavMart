@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Pembeli
-            // Address ID boleh null jika user menghapus alamat lama, agar history order tetap aman
-            $table->foreignId('address_id')->nullable()->constrained('user_addresses')->nullOnDelete();
-            
             $table->bigInteger('total_price');
             $table->enum('status', ['pending', 'processing', 'shipped', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();

@@ -12,15 +12,15 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    // 0. Menampilkan Halaman Checkout (Ditambahkan agar route 'checkout' bekerja)
+    // 0. Menampilkan Halaman Checkout
     public function showCheckoutPage()
     {
         $user = Auth::user();
         
-        // Ambil data cart user untuk ditampilkan di halaman checkout
+        // Ambil data cart user
         $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
 
-        // Jika tidak ada cart atau kosong, lempar balik ke cart index
+        // Jika tidak ada cart atau kosong
         if (!$cart || $cart->items->count() == 0) {
             return redirect()->route('cart.index')->with('error', 'Keranjang belanja Anda kosong, silahkan pilih produk dulu.');
         }
@@ -31,10 +31,7 @@ class OrderController extends Controller
     // 1. Proses Checkout (POST)
     public function checkout(Request $request)
     {
-        // Validasi: Alamat Wajib Diisi
-        $request->validate([
-            'address' => 'required|string|max:500',
-        ]);
+        // [DIHAPUS] Validasi alamat tidak lagi diperlukan
 
         $user = Auth::user();
         
@@ -46,42 +43,55 @@ class OrderController extends Controller
             return back()->with('error', 'Keranjang belanja Anda kosong!');
         }
 
-        // Gunakan Transaksi Database (Agar aman data tidak korup)
-        DB::transaction(function () use ($user, $cart, $request) {
-            
-            // A. Hitung Total Harga
-            $totalPrice = 0;
-            foreach ($cart->items as $item) {
-                $totalPrice += $item->product->price * $item->quantity;
-            }
+        // Ambil item yang dicentang user
+        $selectedIds = explode(',', $request->selected_items_ids);
 
-            // B. Buat Header Order (Simpan Alamat Disini)
+        if (empty($selectedIds) || $selectedIds[0] === "") {
+            return back()->with('error', 'Silakan pilih produk yang ingin di-checkout.');
+        }
+
+        // Filter item terpilih saja
+        $selectedItems = $cart->items()->whereIn('id', $selectedIds)->get();
+
+        if ($selectedItems->count() === 0) {
+            return back()->with('error', 'Produk yang dipilih tidak ditemukan.');
+        }
+
+        // Gunakan Transaksi Database untuk keamanan data
+        DB::transaction(function () use ($user, $cart, $selectedItems) {
+
+            // Hitung total berdasarkan item terpilih
+            $totalPrice = $selectedItems->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
+
+            // A. Buat Header Order
             $order = Order::create([
-                'user_id' => $user->id,
-                'total_price' => $totalPrice,
-                'status' => 'pending',
+                'user_id'      => $user->id,
+                'total_price'  => $totalPrice,
+                'status'       => 'pending',
                 'invoice_code' => 'INV-' . now()->format('YmdHis') . '-' . $user->id,
-                'shipping_address' => $request->address, // ✅ Simpan Alamat dari Form
+                // 'address' / 'address_id' sudah dihapus dari sini
             ]);
 
-            // C. Pindahkan Item dari Keranjang ke Order Item
-            foreach ($cart->items as $item) {
+            // B. Pindahkan item yang DIPILIH ke order item
+            foreach ($selectedItems as $item) {
                 OrderItem::create([
-                    'order_id' => $order->id,
+                    'order_id'   => $order->id,
                     'product_id' => $item->product_id,
-                    'store_id' => $item->product->store_id, // Penting untuk Seller
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->price,
-                    'subtotal' => $item->product->price * $item->quantity,
-                    'status' => 'pending',
+                    'store_id'   => $item->product->store_id,
+                    'quantity'   => $item->quantity,
+                    'price'      => $item->product->price,
+                    'subtotal'   => $item->product->price * $item->quantity,
+                    'status'     => 'pending',
                 ]);
 
-                // D. Kurangi Stok Produk
+                // Kurangi stok produk
                 $item->product->decrement('stock', $item->quantity);
             }
 
-            // E. Kosongkan Keranjang setelah berhasil
-            $cart->items()->delete();
+            // C. Hapus hanya item yang dicentang dari keranjang
+            $cart->items()->whereIn('id', $selectedItems->pluck('id'))->delete();
         });
 
         return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat! Mohon tunggu konfirmasi penjual.');
@@ -94,7 +104,7 @@ class OrderController extends Controller
         return view('buyer.orders.index', compact('orders'));
     }
 
-    // 3. Lihat Detail Pesanan (Untuk Review & Cek Status)
+    // 3. Lihat Detail Pesanan
     public function show($id)
     {
         $order = Order::with('items.product.store')
@@ -107,22 +117,21 @@ class OrderController extends Controller
     // 4. Batalkan Pesanan
     public function cancel($id)
     {
-        // 1. Cari Order milik user ini
         $order = Order::with('items')->where('user_id', Auth::id())
                       ->where('id', $id)
                       ->firstOrFail();
 
-        // 2. Cek Status (Hanya boleh batal jika status 'pending')
+        // Cek Status (Hanya boleh batal jika status 'pending')
         if ($order->status !== 'pending') {
             return back()->with('error', 'Pesanan tidak dapat dibatalkan karena sudah diproses.');
         }
 
         DB::beginTransaction();
         try {
-            // 3. Ubah Status jadi 'cancelled'
+            // Ubah Status jadi 'cancelled'
             $order->update(['status' => 'cancelled']);
 
-            // 4. (PENTING) Kembalikan Stok Produk
+            // Kembalikan Stok Produk
             foreach ($order->items as $item) {
                 $item->product->increment('stock', $item->quantity);
             }

@@ -1,16 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-bold text-xl text-slate-800 leading-tight">
             {{ __('Tulis Ulasan Produk') }} ✍️
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8 bg-slate-50">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             
+            {{-- ALERT VALIDATION ERROR (Design Konsisten) --}}
             @if ($errors->any())
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                    <ul class="list-disc pl-5">
+                <div class="mb-6 bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg shadow-sm">
+                    <p class="font-bold">Terjadi Kesalahan:</p>
+                    <ul class="list-disc pl-5 mt-1 list-inside">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -18,19 +20,21 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+            {{-- CARD UTAMA FORM --}}
+            <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 p-8 md:p-10">
                 
-                <div class="flex items-center gap-4 mb-8 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <div class="w-20 h-20 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                {{-- DETAIL PRODUK (Design Konsisten) --}}
+                <div class="flex items-center gap-4 mb-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="w-20 h-20 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
                         @else
-                            <div class="flex items-center justify-center h-full text-gray-400 text-xs">No Img</div>
+                            <div class="flex items-center justify-center h-full text-slate-400 text-xs">No Img</div>
                         @endif
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg text-gray-800">{{ $product->name }}</h3>
-                        <p class="text-blue-600 font-medium">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                        <h3 class="font-bold text-lg text-slate-800">{{ $product->name }}</h3>
+                        <p class="text-slate-900 font-bold">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                     </div>
                 </div>
 
@@ -40,8 +44,9 @@
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="order_id" value="{{ $order->id }}">
 
+                    {{-- RATING BINTANG --}}
                     <div class="mb-6" x-data="{ rating: 0, hoverRating: 0 }">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Rating Bintang (1-5)</label>
+                        <label class="block text-slate-700 text-sm font-bold mb-2">Rating Bintang (1-5)</label>
                         
                         <input type="hidden" name="rating" :value="rating" required>
 
@@ -53,8 +58,8 @@
                                     @mouseleave="hoverRating = 0"
                                     class="focus:outline-none transition duration-150 transform hover:scale-110"
                                     :class="{
-                                        'text-yellow-400': hoverRating >= star || (!hoverRating && rating >= star),
-                                        'text-gray-300': hoverRating < star && (!hoverRating || rating < star)
+                                        'text-amber-400': hoverRating >= star || (!hoverRating && rating >= star),
+                                        'text-slate-300': hoverRating < star && (!hoverRating || rating < star)
                                     }">
                                     <svg class="w-10 h-10 fill-current" viewBox="0 0 24 24">
                                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
@@ -62,30 +67,35 @@
                                 </button>
                             </template>
                         </div>
-                        <p class="text-sm text-gray-500 mt-2" x-text="rating > 0 ? rating + ' Bintang terpilih' : 'Klik bintang untuk menilai'"></p>
+                        <p class="text-sm text-slate-500 mt-2" x-text="rating > 0 ? rating + ' Bintang terpilih' : 'Klik bintang untuk menilai'"></p>
                     </div>
+                    
+                    {{-- DESKRIPSI ULASAN --}}
                     <div class="mb-6">
-                        <label for="review" class="block text-gray-700 text-sm font-bold mb-2">Ceritakan Pengalamanmu</label>
+                        <label for="review" class="block text-slate-700 text-sm font-bold mb-2">Ceritakan Pengalamanmu</label>
                         <textarea 
                             name="review" 
                             id="review" 
                             rows="5" 
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            {{-- Styling Input Konsisten --}}
+                            class="w-full rounded-lg border-slate-300 shadow-sm focus:border-amber-600 focus:ring focus:ring-amber-200/50 text-slate-800"
                             placeholder="Bagaimana kualitas barangnya? Apakah pengirimannya cepat?"
                             required></textarea>
                     </div>
 
-                    <div class="flex justify-end gap-3">
-                        <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    {{-- TOMBOL AKSI --}}
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <a href="{{ url()->previous() }}" class="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition shadow-sm">
                             Batal
                         </a>
-                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                        <button type="submit" class="px-8 py-2 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 shadow-lg shadow-slate-400/50 transition transform hover:-translate-y-0.5">
                             Kirim Ulasan 🚀
                         </button>
                     </div>
                 </form>
 
             </div>
+
         </div>
     </div>
 </x-app-layout>

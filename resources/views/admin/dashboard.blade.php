@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <p class="text-gray-600">Gunakan menu navigasi di **header** untuk mengakses fitur manajemen utama seperti **Users, Verifikasi Seller, Kategori, dan Monitoring Produk**.</p>
+                    <p class="text-gray-600">Gunakan menu navigasi di header untuk mengakses fitur manajemen utama seperti Users, Verifikasi Seller, Kategori, dan Monitoring Produk.</p>
                 </div>
             </div>
             {{-- Akhir KONTEN UTAMA --}}

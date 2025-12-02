@@ -73,7 +73,7 @@
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="approved">
                                                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full text-xs transform hover:scale-105 transition shadow-md">
-                                                            ✅ Approve
+                                                             Approve
                                                         </button>
                                                     </form>
 
@@ -83,7 +83,7 @@
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="rejected">
                                                         <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full text-xs transform hover:scale-105 transition shadow-md" onclick="return confirm('Yakin ingin menolak seller ini?')">
-                                                            ❌ Reject
+                                                             Reject
                                                         </button>
                                                     </form>
                                                 </div>

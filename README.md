@@ -87,7 +87,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Login / Register*
 
-<img src="public/images/login-register.png" width="220">
+<img src="public/images/login-register.png" width="600">
 
 * Login: Admin, Seller, Buyer
 * Register: Buyer & Seller (Seller → Pending)
@@ -96,7 +96,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Homepage – Public*
 
-<img src="public/images/homepage-public.png" width="220">
+<img src="public/images/homepage-public.png" width="600">
 
 * List produk + search
 * Add to Cart → redirect login
@@ -105,7 +105,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Homepage – Buyer*
 
-<img src="public/images/homepage-buyer.png" width="220">
+<img src="public/images/homepage-buyer.png" width="600">
 
 * Produk rekomendasi acak
 * Add to Cart aktif
@@ -114,7 +114,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Product List Page*
 
-<img src="public/images/product-list.png" width="220">
+<img src="public/images/product-list.png" width="600">
 
 * Katalog lengkap (gambar, nama, harga)
 
@@ -122,7 +122,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Product Detail Page*
 
-<img src="public/images/product-detail.png" width="220">
+<img src="public/images/product-detail.png" width="600">
 
 * Detail lengkap
 * Rating & review
@@ -132,7 +132,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Buyer Dashboard*
 
-<img src="public/images/buyer-dashboard.png" width="220">
+<img src="public/images/buyer-dashboard.png" width="600">
 
 * Profile
 * Shopping Cart
@@ -142,7 +142,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Seller Dashboard*
 
-<img src="public/images/seller-dashboard.png" width="220">
+<img src="public/images/seller-dashboard.png" width="600">
 
 * Store Management
 * Product CRUD
@@ -152,7 +152,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Pending Seller Page*
 
-<img src="public/images/pending-seller.png" width="220">
+<img src="public/images/pending-seller.png" width="600">
 
 * Pesan “Akun Anda sedang ditinjau”
 * Jika Rejected → tombol **Delete Account**
@@ -161,7 +161,7 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Admin Dashboard*
 
-<img src="public/images/admin-dashboard.png" width="220">
+<img src="public/images/admin-dashboard.png" width="600">
 
 * User Management
 * Seller Verification

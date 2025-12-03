@@ -2,7 +2,7 @@
 # 📘 *Marketplace Management – Laravel E-Commerce*
 
 Aplikasi Marketplace ini dibangun menggunakan Laravel dengan sistem *role-based access: *Admin, Seller, Buyer, dan Public User.
-Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review, serta **pengaturan kategori & toko*.
+Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review, serta *pengaturan kategori & toko*.
 
 ---
 
@@ -147,13 +147,13 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 ## *1. Clone Repository*
 
 
-git clone https://github.com/Mirnafebriasari/Manajemen-Perpustakaan.git
+git clone https://github.com/Davidzen111/DavMart.git
 
 
 ## *2. Masuk Folder Project*
 
 
-cd Manajemen-Perpustakaan
+cd DavMart
 
 
 ## *3. Install Dependensi Laravel*
@@ -170,7 +170,7 @@ Rename .env.example → .env lalu isi database:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=perpustakaan_db
+DB_DATABASE=davmart
 DB_USERNAME=root
 DB_PASSWORD=
 

@@ -87,47 +87,81 @@ Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaa
 
 ## 🔸 *Login / Register*
 
+<img src="public/images/login-register.png" width="220">
+
 * Login: Admin, Seller, Buyer
 * Register: Buyer & Seller (Seller → Pending)
 
+---
+
 ## 🔸 *Homepage – Public*
+
+<img src="public/images/homepage-public.png" width="220">
 
 * List produk + search
 * Add to Cart → redirect login
 
+---
+
 ## 🔸 *Homepage – Buyer*
+
+<img src="public/images/homepage-buyer.png" width="220">
 
 * Produk rekomendasi acak
 * Add to Cart aktif
 
+---
+
 ## 🔸 *Product List Page*
+
+<img src="public/images/product-list.png" width="220">
 
 * Katalog lengkap (gambar, nama, harga)
 
+---
+
 ## 🔸 *Product Detail Page*
+
+<img src="public/images/product-detail.png" width="220">
 
 * Detail lengkap
 * Rating & review
 * Add to Cart
 
+---
+
 ## 🔸 *Buyer Dashboard*
+
+<img src="public/images/buyer-dashboard.png" width="220">
 
 * Profile
 * Shopping Cart
 * Order History
 
+---
+
 ## 🔸 *Seller Dashboard*
+
+<img src="public/images/seller-dashboard.png" width="220">
 
 * Store Management
 * Product CRUD
 * Order Management
 
+---
+
 ## 🔸 *Pending Seller Page*
 
+<img src="public/images/pending-seller.png" width="220">
+
 * Pesan “Akun Anda sedang ditinjau”
-* Jika Rejected → tombol Delete Account
+* Jika Rejected → tombol **Delete Account**
+
+---
 
 ## 🔸 *Admin Dashboard*
+
+<img src="public/images/admin-dashboard.png" width="220">
 
 * User Management
 * Seller Verification

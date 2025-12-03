@@ -1,8 +1,8 @@
 
 # 📘 *Marketplace Management – Laravel E-Commerce*
 
-Aplikasi Marketplace ini dibangun menggunakan Laravel dengan sistem *role-based access: *Admin, Seller, Buyer, dan Public User.
-Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review, serta *pengaturan kategori & toko*.
+Aplikasi Marketplace ini dibangun menggunakan Laravel dengan sistem *role-based access: *Admin, Seller, Buyer, dan Public User*.
+Fitur mencakup *manajemen produk, verifikasi seller, cart & checkout, pengelolaan pesanan, rating & review, serta pengaturan kategori & toko*.
 
 ---
 

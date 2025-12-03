@@ -7,8 +7,6 @@
         <h2 class="font-bold text-xl text-slate-800 leading-tight">
             {{ __('Tambah Produk Baru') }}
         </h2>
-        
-        {{-- Tombol Kembali di Header DIHILANGKAN, dipindahkan ke Content --}}
     </div>
 @endsection
 
@@ -16,11 +14,11 @@
     <div class="py-8 bg-slate-50 min-h-screen">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             
-            {{-- TOMBOL KEMBALI KE DAFTAR PRODUK (Ikon Bulat Konsisten) --}}
+            {{-- TOMBOL KEMBALI KE DAFTAR PRODUK --}}
             <div class="mb-6">
                 <a href="{{ request('source') == 'dashboard' ? route('seller.dashboard') : route('seller.products.index') }}"
                     class="inline-flex items-center justify-center w-10 h-10 p-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md"
+                           focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md"
                     title="Kembali">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -28,7 +26,7 @@
                 </a>
             </div>
 
-            {{-- ALERT VALIDATION ERROR (Design Konsisten) --}}
+            {{-- ALERT VALIDATION ERROR --}}
             @if ($errors->any())
                 <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm shadow-sm">
                     <p class="font-bold">Terjadi Kesalahan Saat Menyimpan Data:</p>
@@ -40,7 +38,7 @@
                 </div>
             @endif
 
-            {{-- CARD UTAMA FORM (Shadow & Rounded Konsisten) --}}
+            {{-- CARD UTAMA FORM --}}
             <div class="bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 p-8 md:p-10">
                 <h3 class="text-2xl font-bold text-slate-800 mb-8">Masukkan Detail Produk</h3>
                 
@@ -49,7 +47,7 @@
                     
                     <input type="hidden" name="source" value="{{ request('source') }}">
 
-                    {{-- NAMA PRODUK (Input Konsisten) --}}
+                    {{-- NAMA PRODUK --}}
                     <div class="mb-6">
                         <label for="name" class="block text-slate-700 font-semibold mb-2 text-sm">Nama Produk</label>
                         <input type="text" id="name" name="name" value="{{ old('name') }}" 
@@ -59,7 +57,7 @@
                         @error('name') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    {{-- KATEGORI (Input Konsisten) --}}
+                    {{-- KATEGORI --}}
                     <div class="mb-6">
                         <label for="category_id" class="block text-slate-700 font-semibold mb-2 text-sm">Kategori</label>
                         <select id="category_id" name="category_id" 
@@ -75,7 +73,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        {{-- HARGA (Input Konsisten) --}}
+                        {{-- HARGA --}}
                         <div>
                             <label for="price" class="block text-slate-700 font-semibold mb-2 text-sm">Harga (Rp)</label>
                             <input type="number" id="price" name="price" value="{{ old('price') }}" 
@@ -84,7 +82,7 @@
                                 @error('price') border-red-500 @enderror" required min="0" placeholder="150000">
                             @error('price') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
-                        {{-- STOK (Input Konsisten) --}}
+                        {{-- STOK --}}
                         <div>
                             <label for="stock" class="block text-slate-700 font-semibold mb-2 text-sm">Stok</label>
                             <input type="number" id="stock" name="stock" value="{{ old('stock') }}" 
@@ -95,7 +93,7 @@
                         </div>
                     </div>
 
-                    {{-- DESKRIPSI (Input Konsisten) --}}
+                    {{-- DESKRIPSI --}}
                     <div class="mb-6">
                         <label for="description" class="block text-slate-700 font-semibold mb-2 text-sm">Deskripsi</label>
                         <textarea id="description" name="description" 
@@ -105,7 +103,7 @@
                         @error('description') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    {{-- GAMBAR PRODUK (Background & Input File Konsisten) --}}
+                    {{-- GAMBAR PRODUK --}}
                     <div class="mb-8 p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-inner">
                         <label for="image" class="block text-slate-700 font-semibold mb-3 text-sm">Gambar Produk</label>
                         <input type="file" id="image" name="image" 
@@ -117,7 +115,7 @@
                         @error('image') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    {{-- TOMBOL AKSI (Garis, Spacing, dan Tombol Konsisten) --}}
+                    {{-- TOMBOL AKSI (Batal & Simpan) --}}
                     <div class="flex items-center justify-between gap-4 pt-4 border-t border-slate-100">
                         <a href="{{ request('source') == 'dashboard' ? route('seller.dashboard') : route('seller.products.index') }}" 
                             class="text-slate-500 hover:text-red-600 font-bold transition duration-300">

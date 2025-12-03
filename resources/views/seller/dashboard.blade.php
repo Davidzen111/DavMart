@@ -5,7 +5,6 @@
 @section('content')
 <div class="py-8 bg-slate-50 min-h-screen"> 
     
-    {{-- Header Mobile (Opsional) --}}
     <div class="md:hidden mb-6 px-4">
         <h2 class="text-2xl font-bold text-slate-800">Dashboard Toko</h2>
     </div>
@@ -17,7 +16,6 @@
             {{-- MAIN KONTEN DASHBOARD --}}
             <div class="w-full p-6 md:p-10">
                 
-                {{-- Penanganan Variabel PHP dan Error/Success Message --}}
                 @php
                     $store = Auth::user()->store; 
                     $storeName = $store->name ?? 'Nama Toko Belum Diatur';
@@ -43,9 +41,10 @@
                     </div>
                 @endif
                 
-                {{-- PROFIL TOKO (Jarak bawah dibuat konsisten dengan section lain) --}}
+                {{-- PROFIL TOKO --}}
                 <div class="bg-slate-50 p-8 border border-slate-200 rounded-2xl mb-10 shadow-lg shadow-slate-100/50 text-center relative overflow-hidden">
                     <div class="relative z-10">
+                        {{-- Logo/Inisial Toko --}}
                         <div class="mx-auto w-24 h-24 rounded-full bg-white border-4 border-slate-100 flex items-center justify-center text-slate-800 text-4xl font-extrabold mb-4 overflow-hidden shadow-xl">
                             @if($imageUrl)
                                 <img src="{{ $imageUrl }}" class="w-full h-full object-cover" alt="Logo Toko">
@@ -54,22 +53,24 @@
                             @endif
                         </div>
 
+                        {{-- Nama dan Email Penjual --}}
                         <h1 class="text-3xl font-extrabold text-slate-900 mb-1 tracking-tight">{{ $storeName }}</h1>
                         <p class="text-sm text-slate-500 mb-4">{{ $user->email }}</p>
                         
+                        {{-- Deskripsi Toko --}}
                         @if($store->description)
                             <p class="text-slate-600 max-w-2xl mx-auto italic mb-6">"{{ $storeDescription }}"</p>
                         @endif
                         
+                        {{-- Tombol Edit Profil Toko --}}
                         <a href="{{ route('seller.store.edit') }}" class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white border border-slate-300 text-slate-800 text-sm font-semibold shadow-md hover:bg-amber-50 hover:border-amber-400 hover:text-amber-700 transition duration-300">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             Edit Profil Toko
                         </a>
                     </div>
                 </div>
-                {{-- END PROFIL TOKO --}}
 
-                {{-- HEADER RINGKASAN KINERJA (Jarak bawah konsisten) --}}
+                {{-- HEADER RINGKASAN KINERJA --}}
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-bold text-slate-800">Ringkasan Kinerja 📊</h3>
                     <span class="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full font-medium">{{ now()->format('d M Y') }}</span>
@@ -78,7 +79,7 @@
                 {{-- Kartu Ringkasan Statistik --}}
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
                     
-                    {{-- Card 1: Total Produk (Neutral/Slate) --}}
+                    {{-- Card 1: Total Produk --}}
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg hover:shadow-xl transition group">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-slate-100 p-3 rounded-xl text-slate-600 group-hover:bg-slate-800 group-hover:text-white transition">
@@ -90,7 +91,7 @@
                         <p class="text-xs text-slate-500 mt-1">Item aktif dijual</p>
                     </div>
 
-                    {{-- Card 2: Pesanan Baru (Amber/Urgency) --}}
+                    {{-- Card 2: Pesanan Baru --}}
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg hover:shadow-xl transition group relative">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-amber-100 p-3 rounded-xl text-amber-700 group-hover:bg-amber-700 group-hover:text-white transition">
@@ -106,7 +107,7 @@
                         @endif
                     </div>
 
-                    {{-- Card 3: Total Pendapatan (Green for Money/Success) --}}
+                    {{-- Card 3: Total Pendapatan --}}
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg hover:shadow-xl transition group">
                         <div class="flex items-center justify-start mb-6"> 
                             <div class="bg-green-100 p-3 rounded-xl text-green-700 group-hover:bg-green-700 group-hover:text-white transition">
@@ -121,7 +122,7 @@
                     </div>
                 </div>
 
-                {{-- Area Call to Action (CTA) (Jarak bawah dibuat besar untuk penutup konten) --}}
+                {{-- Area Call to Action (CTA): Tambah Produk --}}
                 <div class="bg-white p-8 rounded-2xl border-2 border-dashed border-slate-300 text-center hover:border-amber-400 transition group shadow-lg mb-10 md:mb-16">
                     <div class="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300 border border-slate-200">
                         <svg class="w-8 h-8 text-slate-600 group-hover:text-amber-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>

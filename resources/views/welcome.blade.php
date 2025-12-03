@@ -8,7 +8,6 @@
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        /* Utilitas untuk menyembunyikan scrollbar kategori */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -27,12 +26,13 @@
                             <img src="{{ asset('images/logo.png') }}" alt="DavMart" class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl object-cover shadow-sm ring-2 ring-slate-100 transition-transform group-hover:scale-105">
                         </div>
                         <span class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight hidden sm:block group-hover:text-amber-700 transition-colors">DavMart</span>
-                        <span class="text-lg font-bold text-slate-900 sm:hidden">DM</span>
+                        <span class="text-lg font-bold text-slate-900 sm:hidden">DavMart</span>
                     </a>
                 </div>
 
                 <div class="flex items-center gap-2 md:gap-4">
                     @auth
+                        {{-- Dropdown Profil Pengguna (Desktop & Mobile) --}}
                         <div class="relative ml-1 md:ml-3">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
@@ -49,9 +49,7 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <div class="px-4 py-2 text-xs font-bold text-slate-800 border-b border-slate-100 md:hidden">
-                                        Hi, {{ Auth::user()->name }}
-                                    </div>
+                                    {{-- Link Dashboard berdasarkan Role --}}
                                     @if(Auth::user()->role === 'admin')
                                         <x-dropdown-link :href="route('admin.dashboard')">Dashboard Admin</x-dropdown-link>
                                     @elseif(Auth::user()->role === 'seller')
@@ -60,6 +58,7 @@
                                         <x-dropdown-link :href="route('dashboard')">Profil Saya</x-dropdown-link>
                                     @endif
                                     <div class="border-t border-slate-100"></div>
+                                    {{-- Tombol Logout --}}
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-500 hover:text-red-700">
@@ -70,6 +69,7 @@
                             </x-dropdown>
                         </div>
                     @else
+                        {{-- Tombol Masuk/Daftar (Jika Belum Login) --}}
                         <div class="flex items-center gap-2">
                             <a href="{{ route('login') }}" class="text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 transition-colors">Masuk</a>
                             <a href="{{ route('register') }}" class="text-xs md:text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all shadow-md hover:shadow-lg">Daftar</a>
@@ -80,11 +80,11 @@
         </div>
     </nav>
 
-    {{-- HERO SECTION --}}
+    {{-- HERO SECTION (Banner Utama) --}}
     <div class="relative bg-slate-900 text-white pt-16 pb-24 md:pt-28 md:pb-40 overflow-hidden">
         <div class="absolute inset-0 z-0">
-             <img src="{{ asset('images/banner.jpg') }}" alt="Banner" class="w-full h-full object-cover opacity-40">
-             <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-slate-900/20"></div>
+               <img src="{{ asset('images/banner.jpg') }}" alt="Banner" class="w-full h-full object-cover opacity-40">
+               <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-slate-900/20"></div>
         </div>
         
         <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
@@ -97,10 +97,11 @@
         </div>
     </div>
 
-    {{-- SEARCH BAR AND FILTER (Floating below Hero) --}}
+    {{-- SEARCH BAR AND FILTER (Kotak Pencarian Mengambang) --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-30">
         <form action="{{ route('home') }}" method="GET" class="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-slate-200/40 border border-slate-100 flex flex-col md:flex-row gap-3">
             
+            {{-- Input Pencarian Utama --}}
             <div class="relative flex-1 w-full">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -113,6 +114,7 @@
             
             <div class="flex items-center gap-2 w-full md:w-auto">
                 <div class="relative w-full md:w-auto">
+                    {{-- Dropdown Filter Lanjutan --}}
                      <x-dropdown align="right" width="full_mobile">
                         <x-slot name="trigger">
                             <button type="button" class="w-full md:w-auto h-[46px] md:h-[48px] px-4 md:px-6 inline-flex items-center justify-center bg-white border border-slate-200 hover:border-slate-400 hover:text-slate-900 rounded-xl text-sm font-bold text-slate-600 transition-all shadow-sm">
@@ -151,7 +153,7 @@
         </form>
     </div>
 
-    {{-- PRODUCT LISTING SECTION --}}
+    {{-- PRODUCT LISTING SECTION (Daftar Produk) --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12">
 
         @if(isset($recommendedProducts) && $recommendedProducts->isNotEmpty())
@@ -173,9 +175,9 @@
                 <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full relative">
                     
                     <div class="absolute top-3 right-3 z-20">
-                         <span class="bg-amber-500/90 backdrop-blur text-white text-[9px] md:text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
-                            POPULER
-                        </span>
+                           <span class="bg-amber-500/90 backdrop-blur text-white text-[9px] md:text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                                POPULER
+                            </span>
                     </div>
 
                     <a href="{{ route('product.detail', $product->id) }}" class="flex-grow block">
@@ -188,7 +190,7 @@
                         </div>
 
                         <div class="p-4 space-y-2">
-                            {{-- Store Name (with initial placeholder) --}}
+                            {{-- Store Name --}}
                             <div class="flex items-center gap-2">
                                 <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[9px] font-bold ring-1 ring-slate-200 shrink-0">
                                     {{ substr($product->store->name, 0, 1) }}
@@ -241,7 +243,7 @@
                     <p class="text-xs md:text-sm text-slate-500 mt-1">Jelajahi semua kategori yang tersedia</p>
                 </div>
                 
-                {{-- Category Filters --}}
+                {{-- Category Filters (Horizontal Scroll) --}}
                 <div class="w-full md:w-auto overflow-x-auto pb-2 no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                     <div class="flex gap-2 w-max">
                         <a href="{{ route('home', array_merge(request()->except(['category', 'page']))) }}" 
@@ -331,7 +333,7 @@
 
     </div>
 
-    {{-- FOOTER --}}
+    <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-8 md:py-12 mt-8 md:mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h4 class="font-bold text-slate-800 text-base md:text-lg mb-2">DavMart</h4>

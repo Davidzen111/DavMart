@@ -4,10 +4,24 @@
 
 @section('content')
 
-    {{-- HEADER HALAMAN --}}
+    @auth
+        @php
+            $backRoute = match (Auth::user()->role ?? 'buyer') {
+                'admin' => route('admin.dashboard'),
+                'seller' => route('seller.dashboard'),
+                default => route('dashboard'),
+            };
+            $ariaLabel = match (Auth::user()->role ?? 'buyer') {
+                'admin' => 'Kembali ke Dashboard Admin',
+                'seller' => 'Kembali ke Dashboard Toko',
+                default => 'Kembali ke Dashboard Saya',
+            };
+        @endphp
+    @endauth
+
+    {{-- HEADER HALAMAN & Tombol Kembali --}}
     <div class="mb-8 flex items-center gap-4 mt-4">
         
-        {{-- TOMBOL KEMBALI (Ikon Bulat Konsisten) --}}
         <a href="{{ $backRoute ?? route('home') }}" 
             class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-amber-600 hover:bg-slate-50 hover:border-amber-400 transition-all duration-200 ease-in-out shadow-md"
             aria-label="{{ $ariaLabel ?? 'Kembali ke Beranda' }}">
@@ -25,8 +39,6 @@
 
     {{-- WRAPPER KONTEN --}}
     <div>
-        
-        {{-- Flash Messages (Design Konsisten) --}}
         @if(session('success'))
             <div class="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg relative mb-6 shadow-sm flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -34,10 +46,7 @@
             </div>
         @endif
 
-        {{-- LOGIKA TAMPILAN PESANAN --}}
         @if($orders->isEmpty())
-            
-            {{-- State Kosong (Design Konsisten) --}}
             <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl p-10 text-center flex flex-col items-center justify-center min-h-[400px] border border-slate-100">
                 <div class="text-6xl mb-4 opacity-50 grayscale text-slate-400">📄</div>
                 <h3 class="text-xl font-bold text-slate-700 mb-2">Belum ada riwayat pesanan</h3>
@@ -56,7 +65,6 @@
 
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-md">
                         <table class="min-w-full bg-white mb-2">
-                            {{-- Table Header --}}
                             <thead class="bg-slate-100 text-slate-600 uppercase text-xs leading-normal font-bold tracking-wider border-b border-slate-200">
                                 <tr>
                                     <th class="py-3.5 px-6 text-center rounded-tl-xl w-16">No</th>
@@ -69,25 +77,20 @@
                             <tbody class="text-slate-700 text-sm divide-y divide-slate-100">
                                 @foreach($orders->take(10) as $order)
                                 <tr class="hover:bg-slate-50 transition">
-                                    
-                                    {{-- Nomor Urut --}}
+
                                     <td class="py-4 px-6 text-center font-semibold text-slate-700">
                                         {{ $loop->iteration }}
                                     </td>
 
-                                    {{-- Tanggal & Invoice Kecil --}}
                                     <td class="py-4 px-6 text-slate-600">
                                         <div class="font-medium text-slate-800">{{ $order->created_at->format('d M Y, H:i') }}</div>
-                                        {{-- Warna invoice/order number menggunakan Amber --}}
                                         <div class="text-xs text-amber-600 font-mono mt-1">{{ $order->invoice_code }}</div>
                                     </td>
 
-                                    {{-- Total --}}
                                     <td class="py-4 px-6 text-center font-bold text-slate-900">
                                         Rp {{ number_format($order->total_price, 0, ',', '.') }}
                                     </td>
 
-                                    {{-- Status Badge --}}
                                     <td class="py-4 px-6 text-center">
                                         @php
                                             $statusClass = match($order->status) {
@@ -112,7 +115,6 @@
                                         </span>
                                     </td>
 
-                                    {{-- Tombol Detail (Konsisten) --}}
                                     <td class="py-4 px-6 text-center">
                                         <a href="{{ route('orders.show', $order->id) }}" 
                                             class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-amber-600 hover:border-amber-300 transition-colors duration-200 shadow-sm" 

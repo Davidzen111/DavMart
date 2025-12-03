@@ -6,7 +6,6 @@
 
     {{-- HEADER HALAMAN --}}
     <div class="mb-8 flex items-center gap-4 mt-4">
-        {{-- Tombol Kembali --}}
         <a href="{{ route('orders.index') }}" 
             class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-amber-600 hover:bg-slate-50 hover:border-amber-400 transition-all duration-200 ease-in-out shadow-md"
             aria-label="Kembali ke Riwayat">
@@ -25,7 +24,6 @@
         </div>
     </div>
 
-    {{-- FLASH MESSAGE --}}
     @if(session('success'))
         <div class="mb-6 bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -42,24 +40,18 @@
     {{-- KONTEN UTAMA --}}
     <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100">
         
-        {{-- BAGIAN ATAS: INFO UTAMA (Layout Diperbaiki) --}}
+        {{-- BAGIAN ATAS: INFO UTAMA, STATUS & BATAL --}}
         <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            
-            {{-- KIRI: Tanggal --}}
             <div>
                 <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-0.5">Tanggal Order</p>
                 <p class="font-bold text-slate-800 text-sm md:text-base">{{ $order->created_at->format('d M Y, H:i') }} WIB</p>
             </div>
             
-            {{-- KANAN: Status & Aksi --}}
             <div class="flex flex-wrap items-center gap-3">
-                
-                {{-- Tombol Batal (Hanya muncul jika pending) --}}
                 @if($order->status == 'pending')
                     <form action="{{ route('orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?');">
                         @csrf
                         @method('PATCH')
-                        {{-- STYLE TOMBOL DIPERBAIKI: Lebih kecil, outline halus, tidak mendominasi --}}
                         <button type="submit" class="group inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 text-slate-600 text-xs font-bold rounded-lg hover:border-red-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 shadow-sm">
                             <svg class="w-3.5 h-3.5 transition-colors group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             Batalkan
@@ -67,7 +59,6 @@
                     </form>
                 @endif
 
-                {{-- Status Badge --}}
                 @php
                     $statusClass = match($order->status) {
                         'pending' => 'bg-amber-100 text-amber-700 border-amber-200',
@@ -145,8 +136,6 @@
                             </p>
                         </div>
                     </div>
-
-                    {{-- Harga Total Item --}}
                     <div class="text-left sm:text-right pl-20 sm:pl-0">
                         <p class="font-bold text-slate-800 text-sm mb-2">
                             Rp {{ number_format(($item->price * $item->quantity), 0, ',', '.') }}

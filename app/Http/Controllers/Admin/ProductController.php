@@ -11,7 +11,6 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // Ambil semua produk beserta info tokonya
         $products = Product::with('store')->latest()->get();
         return view('admin.products.index', compact('products'));
     }
@@ -20,7 +19,6 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Hapus gambar
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }

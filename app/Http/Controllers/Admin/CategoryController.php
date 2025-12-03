@@ -9,20 +9,17 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    // 1. Tampilkan Daftar Kategori
     public function index()
     {
         $categories = Category::all();
         return view('admin.categories.index', compact('categories'));
     }
 
-    // 2. Halaman Tambah Kategori
     public function create()
     {
         return view('admin.categories.create');
     }
 
-    // 3. Simpan Kategori Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -37,13 +34,11 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
-    // 4. Halaman Edit Kategori
     public function edit(Category $category)
     {
         return view('admin.categories.edit', compact('category'));
     }
 
-    // 5. Update Kategori
     public function update(Request $request, Category $category)
     {
         $request->validate([
@@ -58,7 +53,6 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diupdate!');
     }
 
-    // 6. Hapus Kategori
     public function destroy(Category $category)
     {
         $category->delete();

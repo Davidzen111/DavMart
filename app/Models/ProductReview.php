@@ -11,14 +11,14 @@ class ProductReview extends Model
     protected $guarded = ['id'];
 
     public function user() {
-        return $this->belongsTo(User::class); // Siapa yang review
+        return $this->belongsTo(User::class); 
     }
 
     public function product() {
-        return $this->belongsTo(Product::class); // Produk apa yang direview
+        return $this->belongsTo(Product::class); 
     }
     
-    // Optional: Untuk cek review ini dari order yang mana (validasi verified purchase)
+    
     public function order() {
         return $this->belongsTo(Order::class);
     }

@@ -12,11 +12,11 @@
     <div class="py-8 bg-slate-50 min-h-screen">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- TOMBOL KEMBALI KE DAFTAR PRODUK (Ikon Bulat Konsisten) --}}
+            {{-- TOMBOL KEMBALI KE DAFTAR PRODUK --}}
             <div class="mb-6">
                 <a href="{{ route('seller.products.index') }}"
                     class="inline-flex items-center justify-center w-10 h-10 p-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md"
+                           focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md"
                     title="Kembali ke Daftar Produk">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -24,7 +24,7 @@
                 </a>
             </div>
 
-            {{-- ALERT VALIDATION ERROR (Design Konsisten) --}}
+            {{-- ALERT VALIDATION ERROR --}}
             @if ($errors->any())
                 <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm shadow-sm">
                     <p class="font-bold">Terjadi Kesalahan:</p>
@@ -106,7 +106,6 @@
                     <div class="mb-8 p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-inner">
                         <label for="image" class="block text-slate-700 font-semibold mb-3 text-sm">Gambar Produk</label>
                         
-                        {{-- GAMBAR SAAT INI --}}
                         @if($product->image)
                             <div class="mb-4">
                                 <p class="text-xs text-slate-500 mb-1">Gambar saat ini:</p>
@@ -123,7 +122,7 @@
                         @error('image') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    {{-- TOMBOL AKSI (Garis pemisah dan padding konsisten) --}}
+                    {{-- TOMBOL AKSI (Batal & Update) --}}
                     <div class="flex items-center justify-between gap-4 pt-4 border-t border-slate-100">
                         <a href="{{ route('seller.products.index') }}" 
                             class="text-slate-500 hover:text-red-600 font-bold transition duration-300">

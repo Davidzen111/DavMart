@@ -5,13 +5,11 @@
 @section('content')
     <div class="py-8 bg-slate-50 min-h-screen"> 
         
-        {{-- WRAPPER UNTUK MEMBATASI LEBAR KONTEN AGAR LEBIH RAPI (max-w-3xl) --}}
+        {{-- WRAPPER KONTEN --}}
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS --}}
             @auth
                 @php
-                    // Pastikan $user sudah didefinisikan untuk input forms
                     $user = Auth::user(); 
                     $backRoute = match (Auth::user()->role) {
                         'admin' => route('admin.dashboard'),
@@ -26,9 +24,7 @@
                 @endphp
             @endauth
 
-            {{-- HEADER HALAMAN KUSTOM --}}
             <div class="mb-6 flex items-center gap-4">
-                {{-- Tombol Kembali Dinamis (Ikon Bulat Konsisten) --}}
                 <a href="{{ $backRoute ?? route('home') }}" 
                     class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200 ease-in-out shadow-md"
                     aria-label="{{ $ariaLabel ?? 'Kembali ke Beranda' }}">
@@ -39,7 +35,7 @@
 
                 <div>
                     <h2 class="text-2xl font-bold text-slate-800 leading-tight">
-                        {{ __('Pengaturan Akun') }} ⚙️
+                        {{ __('Pengaturan Akun') }} 
                     </h2>
                 </div>
             </div>
@@ -55,6 +51,7 @@
                     @csrf
                     @method('patch')
 
+                    {{-- Input Nama --}}
                     <div>
                         <label for="name" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Nama Lengkap') }}</label>
                         <input id="name" name="name" type="text" 
@@ -65,6 +62,7 @@
                         @enderror
                     </div>
 
+                    {{-- Input Email --}}
                     <div>
                         <label for="email" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Email') }}</label>
                         <input id="email" name="email" type="email" 
@@ -77,11 +75,10 @@
 
                     <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
                         <button type="submit" 
-                            {{-- AKSI UTAMA MENGGUNAKAN AMBER (Konsisten dengan warna aksen Home) --}}
                             class="inline-flex items-center justify-center bg-amber-600 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-amber-700 transition shadow-lg shadow-amber-400/50 transform hover:-translate-y-0.5">
                             Simpan Perubahan
-                        </button>
 
+                        </button>
                         @if (session('status') === 'profile-updated')
                             <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" 
                                 class="text-sm text-green-600 font-medium flex items-center gap-1">
@@ -104,6 +101,7 @@
                     @csrf
                     @method('put')
 
+                    {{-- Input Kata Sandi Saat Ini --}}
                     <div>
                         <label for="current_password" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Kata Sandi Saat Ini') }}</label>
                         <input id="current_password" name="current_password" type="password" 
@@ -114,6 +112,7 @@
                         @enderror
                     </div>
 
+                    {{-- Input Kata Sandi Baru --}}
                     <div>
                         <label for="password" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Kata Sandi Baru') }}</label>
                         <input id="password" name="password" type="password" 
@@ -124,6 +123,7 @@
                         @enderror
                     </div>
 
+                    {{-- Konfirmasi Kata Sandi Baru --}}
                     <div>
                         <label for="password_confirmation" class="block font-medium text-sm text-slate-700 font-semibold mb-2">{{ __('Konfirmasi Kata Sandi Baru') }}</label>
                         <input id="password_confirmation" name="password_confirmation" type="password" 
@@ -136,7 +136,6 @@
 
                     <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
                         <button type="submit" 
-                            {{-- AKSI UTAMA MENGGUNAKAN SLATE-900 --}}
                             class="inline-flex items-center justify-center bg-slate-900 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-slate-800 transition shadow-lg shadow-slate-400/50 transform hover:-translate-y-0.5">
                             Update Password
                         </button>
@@ -165,7 +164,6 @@
                     </button>
                 </div>
 
-                {{-- Modal Konfirmasi Hapus --}}
                 <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
                     <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
                         @csrf
@@ -185,12 +183,10 @@
                         </div>
                         
                         <div class="mt-6 flex justify-end gap-3">
-                            {{-- Tombol Batal --}}
                             <x-secondary-button x-on:click="$dispatch('close')" 
                                 class="border border-slate-300 bg-white hover:bg-slate-50 text-slate-600 font-semibold rounded-lg shadow-sm">
                                 Batal
                             </x-secondary-button>
-                            {{-- Tombol Hapus --}}
                             <x-danger-button 
                                 class="bg-red-600 text-white hover:bg-red-700 font-bold rounded-lg shadow-sm">
                                 Hapus Akun

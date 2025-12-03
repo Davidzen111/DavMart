@@ -18,10 +18,9 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained()->onDelete('cascade'); // PENTING: Agar Seller bisa lihat orderan dia saja
             
             $table->integer('quantity');
-            $table->bigInteger('price'); // Harga saat checkout
+            $table->bigInteger('price'); 
             $table->bigInteger('subtotal');
             
-            // ✅✅✅ BARIS INI YANG HILANG SEBELUMNYA ✅✅✅
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
             // ----------------------------------------------
 

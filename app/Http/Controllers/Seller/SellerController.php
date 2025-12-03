@@ -9,7 +9,6 @@ use App\Models\OrderItem;
 
 class SellerController extends Controller
 {
-    // 1. Dashboard Utama (Ringkasan Toko)
     public function index() 
     {
         $user = Auth::user();
@@ -47,7 +46,6 @@ class SellerController extends Controller
         return view('seller.dashboard', compact('productsCount', 'newOrders', 'income'));
     }
 
-    // 2. Halaman Pending
     public function pending()
     {
         $user = Auth::user();
@@ -63,7 +61,6 @@ class SellerController extends Controller
         return view('seller.pending');
     }
 
-    // 3. Halaman Rejected
     public function rejected()
     {
         $user = Auth::user();
@@ -79,7 +76,6 @@ class SellerController extends Controller
         return view('seller.rejected');
     }
 
-    // 4. Hapus Akun Seller
     public function destroy(Request $request)
     {
         $user = Auth::user(); 
@@ -95,14 +91,12 @@ class SellerController extends Controller
 
     // --- FITUR PENGATURAN TOKO ---
 
-    // 5. Form Edit Toko
     public function editStore()
     {
         $store = Auth::user()->store;
         return view('seller.store.edit', compact('store'));
     }
 
-    // 6. Update Informasi Toko
     public function updateStore(Request $request)
     {
         $request->validate([
@@ -113,19 +107,15 @@ class SellerController extends Controller
 
         $store = Auth::user()->store;
 
-        // Update nama & deskripsi
         $store->name = $request->name;
         $store->description = $request->description;
 
-        // Upload gambar jika ada
         if ($request->hasFile('image')) {
 
-            // Hapus gambar lama jika ada
             if ($store->image && file_exists(storage_path('app/public/' . $store->image))) {
                 unlink(storage_path('app/public/' . $store->image));
             }
 
-            // Simpan gambar baru
             $path = $request->file('image')->store('store_images', 'public');
             $store->image = $path;
         }

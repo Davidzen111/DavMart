@@ -10,12 +10,10 @@ class CartItem extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    // Item ini ada di keranjang mana?
     public function cart() {
         return $this->belongsTo(Cart::class);
     }
 
-    // Item ini produknya apa?
     public function product() {
         return $this->belongsTo(Product::class);
     }

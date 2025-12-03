@@ -11,14 +11,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    // 1. Tampilkan Form Review
     public function create($productId, $orderId)
     {
-        // Cek apakah produk dan order valid milik user ini
         $order = Order::where('user_id', Auth::id())->findOrFail($orderId);
         $product = Product::findOrFail($productId);
 
-        // Cek apakah sudah pernah review sebelumnya? (Biar gak spam)
         $existingReview = ProductReview::where('user_id', Auth::id())
                                        ->where('product_id', $productId)
                                        ->where('order_id', $orderId)
@@ -31,7 +28,6 @@ class ReviewController extends Controller
         return view('buyer.reviews.create', compact('product', 'order'));
     }
 
-    // 2. Simpan Review ke Database
     public function store(Request $request)
     {
         $request->validate([

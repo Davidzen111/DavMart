@@ -17,7 +17,6 @@
     </head>
     <body class="font-sans text-slate-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-50">
-            {{-- Tambahkan logo atau branding di atas card jika diinginkan --}}
             
             <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-white shadow-xl shadow-slate-200/50 overflow-hidden rounded-2xl border border-slate-100">
                 {{ $slot }}

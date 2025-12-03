@@ -8,7 +8,7 @@
     <div class="py-8 bg-slate-50">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             
-            {{-- ALERT VALIDATION ERROR (Design Konsisten) --}}
+            {{-- ALERT VALIDATION ERROR --}}
             @if ($errors->any())
                 <div class="mb-6 bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg shadow-sm">
                     <p class="font-bold">Terjadi Kesalahan:</p>
@@ -23,7 +23,7 @@
             {{-- CARD UTAMA FORM --}}
             <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 p-8 md:p-10">
                 
-                {{-- DETAIL PRODUK (Design Konsisten) --}}
+                {{-- DETAIL PRODUK --}}
                 <div class="flex items-center gap-4 mb-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
                     <div class="w-20 h-20 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
                         @if($product->image)
@@ -77,7 +77,6 @@
                             name="review" 
                             id="review" 
                             rows="5" 
-                            {{-- Styling Input Konsisten --}}
                             class="w-full rounded-lg border-slate-300 shadow-sm focus:border-amber-600 focus:ring focus:ring-amber-200/50 text-slate-800"
                             placeholder="Bagaimana kualitas barangnya? Apakah pengirimannya cepat?"
                             required></textarea>

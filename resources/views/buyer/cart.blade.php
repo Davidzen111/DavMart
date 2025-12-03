@@ -3,9 +3,14 @@
 @section('title', 'Keranjang Belanja - DavMart')
 
 @section('content')
+    
     {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS --}}
     @auth
         @php
+            $backRoute = route('dashboard'); // Default untuk Buyer
+            $ariaLabel = 'Kembali ke Dashboard Saya';
+            
+            // Logika lebih spesifik untuk role lain, meskipun ini layout buyer
             $backRoute = match (Auth::user()->role ?? 'buyer') {
                 'admin' => route('admin.dashboard'),
                 'seller' => route('seller.dashboard'),
@@ -16,10 +21,10 @@
                 'seller' => 'Kembali ke Dashboard Toko',
                 default => 'Kembali ke Dashboard Saya',
             };
-            // $defaultAddress = Auth::user()->address ?? ''; // Dihapus karena alamat dihapus dari form
         @endphp
     @endauth
 
+    {{-- HEADER HALAMAN & Tombol Kembali --}}
     <div class="mb-8 flex items-center gap-4 mt-4">
         <a href="{{ $backRoute ?? route('home') }}" 
             class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-amber-600 hover:bg-slate-50 hover:border-amber-400 transition-all duration-200 ease-in-out shadow-md"
@@ -36,8 +41,10 @@
         </div>
     </div>
 
+    {{-- KONTEN UTAMA KERANJANG (Menggunakan Alpine.js untuk total) --}}
     <div x-data="cartHandler()">
         
+        {{-- ALERT (Success/Error) --}}
         @if(session('success'))
             <div class="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg relative mb-6 shadow-sm flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -51,6 +58,7 @@
             </div>
         @endif
 
+        {{-- TAMPILAN KERANJANG KOSONG --}}
         @if(!$cart || $cart->items->count() == 0)
             <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl p-10 text-center flex flex-col items-center justify-center min-h-[400px] border border-slate-100">
                 <div class="text-6xl mb-4 opacity-50 grayscale text-slate-400">🛒</div>
@@ -64,7 +72,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                {{-- KOLOM KIRI --}}
+                {{-- KOLOM KIRI: DAFTAR PRODUK --}}
                 <div class="lg:col-span-2 bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100">
                     <div class="p-6 md:p-8">
                         <h3 class="text-xl font-bold mb-4 border-b border-slate-100 pb-2 text-slate-800">Daftar Produk</h3>
@@ -87,6 +95,7 @@
                                         data-quantity="{{ $item->quantity }}"
                                         data-item-id="{{ $item->id }}">
                                         
+                                        {{-- CHECKBOX PILIH --}}
                                         <td class="py-4 px-2 text-center">
                                             <input type="checkbox" 
                                                     name="selected_items[]" 
@@ -95,6 +104,7 @@
                                                     class="w-5 h-5 text-amber-600 bg-slate-100 border-slate-300 rounded focus:ring-amber-500 cursor-pointer">
                                         </td>
                                         
+                                        {{-- INFO PRODUK --}}
                                         <td class="py-4 px-4">
                                             <div class="flex items-center">
                                                 @if($item->product->image)
@@ -111,6 +121,7 @@
                                             </div>
                                         </td>
                                         
+                                        {{-- JUMLAH (Form Update) --}}
                                         <td class="py-4 px-4 text-center">
                                             <form action="{{ route('cart.update', $item->id) }}" method="POST" class="flex items-center justify-center">
                                                 @csrf
@@ -126,7 +137,7 @@
                                         </td>
                                         
                                         <td class="py-4 px-4 text-right font-bold text-slate-900">
-                                            Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
+                                            Rp{{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
                                         </td>
                                         
                                         <td class="py-4 px-4 text-center">
@@ -146,7 +157,7 @@
                     </div>
                 </div>
                 
-                {{-- KOLOM KANAN --}}
+                {{-- KOLOM KANAN: RINGKASAN & CHECKOUT --}}
                 <div class="lg:col-span-1">
                     <div class="bg-white p-6 shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 sticky top-24" x-show="total > 0" x-transition>
                         <h3 class="text-xl font-bold mb-4 border-b border-slate-100 pb-2 text-slate-800">Ringkasan Pesanan</h3>
@@ -162,15 +173,14 @@
                             <p class="text-xs text-slate-400 mt-1">Sudah termasuk pajak & biaya layanan</p>
                         </div>
 
+                        {{-- Form Checkout --}}
                         <form action="{{ route('checkout.process') }}" method="POST" x-ref="checkoutForm">
                             @csrf
                             
                             <input type="hidden" name="selected_items_ids" :value="selectedIds.join(',')">
                             
-                            {{-- BAGIAN ALAMAT PENGIRIMAN DIHAPUS SEPENUHNYA --}}
-
                             <button type="submit" 
-                                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-slate-400/50 transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mt-4" {{-- Tambah mt-4 agar tidak menempel ke div atas --}}
+                                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-slate-400/50 transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mt-4" 
                                     :disabled="selectedIds.length === 0"
                                     onclick="return confirm('Proses pesanan sekarang?')">
                                 <span>Checkout Sekarang</span>
@@ -210,7 +220,6 @@
                 selectedCheckboxes.forEach(checkbox => {
                     const row = checkbox.closest('tr');
 
-                    // FIX PENTING: Mendapatkan quantity terbaru dari input sebelum refresh
                     const inputQty = row.querySelector('input[name="quantity"]');
                     if (inputQty) {
                         row.setAttribute('data-quantity', inputQty.value);

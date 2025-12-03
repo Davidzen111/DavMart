@@ -9,7 +9,6 @@ class OrderItem extends Model
 {
     use HasFactory;
 
-    // KITA PAKAI FILLABLE AGAR LEBIH SPESIFIK & AMAN
     protected $fillable = [
         'order_id', 
         'product_id', 
@@ -17,7 +16,7 @@ class OrderItem extends Model
         'quantity', 
         'price', 
         'subtotal', 
-        'status' // <--- Pastikan kolom ini ada disini!
+        'status' 
     ];
 
     public function product() {

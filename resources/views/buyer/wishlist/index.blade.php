@@ -4,7 +4,6 @@
 
 @section('content')
 
-    {{-- LOGIKA PENENTUAN RUTE KEMBALI DINAMIS --}}
     @auth
         @php
             $backRoute = match (Auth::user()->role ?? 'buyer') {
@@ -20,10 +19,9 @@
         @endphp
     @endauth
 
-    {{-- HEADER HALAMAN DENGAN TOMBOL KEMBALI BULAT --}}
+    {{-- HEADER HALAMAN DENGAN TOMBOL KEMBALI --}}
     <div class="mb-8 flex items-center gap-4 mt-4">
         
-        {{-- TOMBOL KEMBALI (Konsisten) --}}
         <a href="{{ $backRoute ?? route('home') }}" 
             class="group flex items-center justify-center w-10 h-10 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-amber-600 hover:bg-slate-50 hover:border-amber-400 transition-all duration-200 ease-in-out shadow-md"
             aria-label="{{ $ariaLabel ?? 'Kembali ke Beranda' }}">
@@ -31,8 +29,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
         </a>
-
-        {{-- JUDUL HALAMAN --}}
         <div>
             <h2 class="text-2xl font-bold text-slate-800 leading-tight flex items-center gap-2">
                 {{ __('Daftar Keinginan') }} <span class="text-red-500 animate-pulse">❤️</span>
@@ -45,14 +41,13 @@
     @if(session('success'))
         <div class="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg relative mb-6 shadow-sm flex items-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            <span class="block sm:inline">**Berhasil!** {{ session('success') }}</span>
+            <span class="block sm:inline">Berhasil! {{ session('success') }}</span>
         </div>
     @endif
 
-    {{-- LOGIKA TAMPILAN GRID --}}
+    {{-- LOGIKA TAMPILAN --}}
     @if($wishlists->isEmpty())
         
-        {{-- Tampilan Jika Kosong (Design Konsisten) --}}
         <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl p-10 text-center flex flex-col items-center justify-center min-h-[400px] border border-slate-100">
             <div class="text-6xl mb-4 opacity-50 grayscale text-slate-400">💔</div>
             <h3 class="text-xl font-bold text-slate-700 mb-2">Wishlist Kosong</h3>
@@ -63,13 +58,11 @@
         </div>
 
     @else
-        
-        {{-- Grid Produk --}}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach($wishlists as $item)
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative group hover:shadow-xl transition duration-300 hover:-translate-y-0.5">
                 
-                {{-- Tombol Hapus (Sampah) - Muncul saat Hover --}}
+                {{-- Tombol Hapus (Sampah) - Hanya Muncul saat Hover --}}
                 <form action="{{ route('wishlist.toggle', $item->product->id) }}" method="POST" class="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition duration-300">
                     @csrf
                     <button type="submit" class="bg-white text-red-600 rounded-full p-2 shadow-lg border border-slate-100 hover:bg-red-50 hover:scale-105 transition transform" title="Hapus dari Wishlist">
@@ -78,7 +71,6 @@
                 </form>
                 
                 <a href="{{ route('product.detail', $item->product->id) }}" class="block h-full flex flex-col">
-                    {{-- Gambar Produk --}}
                     <div class="aspect-square bg-slate-50 flex items-center justify-center overflow-hidden relative">
                         @if($item->product->image)
                             <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
@@ -88,7 +80,6 @@
                                 No Image
                             </div>
                         @endif
-                        {{-- Overlay Gelap saat Hover --}}
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition duration-300"></div>
                     </div>
 
@@ -96,12 +87,10 @@
                     <div class="p-4 flex-grow flex flex-col justify-between">
                         <div>
                             <h3 class="font-bold text-slate-800 text-sm leading-tight mb-2 line-clamp-2 min-h-[40px]">{{ $item->product->name }}</h3>
-                            {{-- Harga menggunakan warna konsisten --}}
                             <p class="text-slate-900 font-bold text-lg">Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
                         </div>
                         
                         <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-                            {{-- Store Initial (Konsisten dengan product card Home) --}}
                             <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0 border border-slate-200">
                                 {{ substr($item->product->store->name ?? 'S', 0, 1) }}
                             </div>

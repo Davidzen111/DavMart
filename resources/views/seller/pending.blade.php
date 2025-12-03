@@ -2,7 +2,7 @@
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-50">
         <div class="w-full sm:max-w-md mt-6 px-6 py-10 bg-white shadow-xl shadow-slate-200/50 overflow-hidden rounded-2xl text-center border border-slate-100">
             
-            {{-- Ikon Jam / Menunggu (Dibuat lebih menonjol dengan background) --}}
+            {{-- Ikon Status (Jam / Menunggu) --}}
             <div class="mb-6 flex justify-center">
                 <div class="p-5 bg-amber-100 rounded-full border-2 border-amber-200">
                     <svg class="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -11,10 +11,12 @@
                 </div>
             </div>
 
+            {{-- Judul Status --}}
             <h2 class="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
                 Pendaftaran Sedang Diproses
             </h2>
 
+            {{-- Pesan Informasi Utama --}}
             <p class="text-slate-600 mb-8 leading-relaxed max-w-sm mx-auto">
                 Halo! Terima kasih sudah mendaftar sebagai Seller. <br>
                 Saat ini tim Admin kami sedang memverifikasi data toko Anda. Mohon tunggu 1x24 jam.
@@ -23,7 +25,7 @@
             <div class="border-t border-slate-200 pt-6">
                 <p class="text-sm text-slate-500 mb-4 font-semibold">Ingin cek lagi nanti?</p>
                 
-                {{-- Tombol Logout (Warna Slate-900, rounded-xl, Shadow Konsisten) --}}
+                {{-- Tombol Logout --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" 

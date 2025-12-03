@@ -6,9 +6,7 @@
 
     <div class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            {{-- TOMBOL KEMBALI KE DASHBOARD ADMIN (Desktop) --}}
-            <div class="mb-4 hidden md:block">
+            <div class="mb-0 hidden md:block">
                 <a href="{{ route('admin.dashboard') }}"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium 
                            rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none 
@@ -20,18 +18,21 @@
                 </a>
             </div>
 
-            {{-- Header Mobile (Tombol Kembali ditambahkan di sini) --}}
-            <div class="md:hidden mb-6 px-4 sm:px-0 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-800">Manajemen Kategori</h2>
-                <a href="{{ route('admin.dashboard') }}" class="text-blue-600 text-sm hover:text-blue-800 font-medium">
-                    ← Kembali
-                </a>
+            <div class="md:hidden mb-6 px-4 sm:px-0 flex flex-col relative"> 
+                
+                <div class="w-full mb-2"> 
+                    <a href="{{ route('admin.dashboard') }}" 
+                        class="text-gray-600 text-sm hover:text-gray-800 font-medium z-10">
+                        ← Kembali
+                    </a>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 w-full text-center">Manajemen Kategori</h2>
             </div>
 
-            {{-- CONTAINER UTAMA (Sidebar dihapus) --}}
+            {{-- CONTAINER UTAMA --}}
             <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100">
                 
-                {{-- 2. KONTEN UTAMA --}}
                 <div class="w-full p-6 md:p-8">
                     
                     @if(session('success'))
@@ -43,7 +44,6 @@
                     <div class="bg-white overflow-hidden p-0">
                         <div class="p-0 text-gray-900">
                             <div class="flex justify-between items-center mb-6 border-b pb-2">
-                                {{-- Judul utama di desktop dipindahkan ke sini jika diperlukan, tapi dibiarkan di dalam konten untuk kerapihan --}}
                                 <h3 class="text-2xl font-bold text-gray-800 hidden md:block">Daftar Kategori Produk</h3>
                                 <a href="{{ route('admin.categories.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition shadow-md">
                                     + Tambah Kategori
@@ -68,10 +68,10 @@
                                             <td class="py-3 px-6 text-left italic text-gray-500">{{ $category->slug }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex item-center justify-center gap-2">
+                                                    {{-- Tombol Edit --}}
                                                     <a href="{{ route('admin.categories.edit', $category->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1.5 px-3 rounded text-xs font-bold transition shadow-sm">
                                                         Edit
                                                     </a>
-                                                    
                                                     <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori {{ $category->name }}?');">
                                                         @csrf
                                                         @method('DELETE')

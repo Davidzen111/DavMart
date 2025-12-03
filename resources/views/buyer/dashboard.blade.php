@@ -8,25 +8,23 @@
     <div class="bg-white overflow-hidden shadow-xl shadow-slate-200/50 rounded-2xl mb-8 border border-slate-100 mt-4">
         <div class="p-6 text-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
-                {{-- Bulatan Profil (Menggunakan warna aksen Slate/Amber) --}}
+                {{-- Bulatan Profil (Inisial) --}}
                 <div class="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-extrabold uppercase shadow-md border-4 border-slate-100">
                     {{ substr(Auth::user()->name, 0, 1) }}
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-slate-800">Halo, {{ Auth::user()->name }}! 👋</h3>
+                    <h3 class="text-xl font-bold text-slate-800">Halo, {{ Auth::user()->name }}! </h3>
                     <p class="text-sm text-slate-500">Selamat datang kembali di Dashboard.</p>
                 </div>
             </div>
-            {{-- Tombol Aksi (Menggunakan Slate-900) --}}
             <a href="{{ route('home') }}" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-slate-800 transition font-bold text-sm shadow-lg shadow-slate-400/50 transform hover:-translate-y-0.5 flex items-center gap-2">
-                🛍️ Belanja Lagi
+                Belanja Lagi
             </a>
         </div>
     </div>
 
-    {{-- SECTION: STATISTIK --}}
+    {{-- SECTION: STATISTIK RINGKAS --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-        {{-- Card 1: Total Pesanan (Aksen Slate) --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-lg flex items-center hover:shadow-xl transition">
             <div class="p-3 bg-slate-100 text-slate-700 rounded-full mr-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
@@ -37,7 +35,6 @@
             </div>
         </div>
 
-        {{-- Card 2: Dalam Proses (Aksen Amber) --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-lg flex items-center hover:shadow-xl transition">
             <div class="p-3 bg-amber-100 text-amber-600 rounded-full mr-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -50,7 +47,6 @@
             </div>
         </div>
 
-        {{-- Card 3: Selesai (Aksen Green) --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-lg flex items-center hover:shadow-xl transition">
             <div class="p-3 bg-green-100 text-green-600 rounded-full mr-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -98,23 +94,20 @@
                             @foreach($orders->take(5) as $order)
                             <tr class="hover:bg-slate-50 transition">
                                 
-                                {{-- ISI NOMOR URUT --}}
                                 <td class="py-4 px-6 text-center font-semibold text-slate-700">
                                     {{ $loop->iteration }}
                                 </td>
 
-                                {{-- TANGGAL & INVOICE KECIL --}}
                                 <td class="py-4 px-6 text-slate-600">
                                     <div class="font-medium text-slate-800">{{ $order->created_at->format('d M Y') }}</div>
-                                    <div class="text-xs text-amber-600 font-mono mt-1">{{ $order->invoice_code ?? '#' . $order->id }}</div>
                                 </td>
 
                                 <td class="py-4 px-6 font-bold text-slate-900">
                                     Rp {{ number_format($order->total_price, 0, ',', '.') }}
                                 </td>
+                                
                                 <td class="py-4 px-6">
                                     @php
-                                        // Mapping status ke kelas warna DavMart
                                         $statusClass = match($order->status) {
                                             'pending' => 'bg-amber-100 text-amber-700 border-amber-300',
                                             'processing' => 'bg-sky-100 text-sky-700 border-sky-300',
@@ -127,7 +120,7 @@
                                             'pending' => 'Menunggu Bayar',
                                             'processing' => 'Diproses',
                                             'shipped' => 'Dikirim',
-                                            'completed' => 'Selesai',
+                                            'delivered' => 'Selesai',
                                             'cancelled' => 'Batal',
                                             default => $order->status
                                         };
@@ -136,6 +129,7 @@
                                         {{ $statusLabel }}
                                     </span>
                                 </td>
+                                
                                 <td class="py-4 px-6 text-center">
                                     <a href="{{ route('orders.show', $order->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-amber-600 hover:border-amber-300 transition shadow-sm" title="Lihat Detail">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>

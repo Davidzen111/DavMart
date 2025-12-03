@@ -8,7 +8,6 @@
     <title>@yield('title', 'DavMart - Toko Online Terpercaya')</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    {{-- Mengganti Figtree dengan Plus Jakarta Sans untuk konsistensi font --}}
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -23,19 +22,17 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-2">
                 
-                {{-- KIRI: LOGO --}}
                 <div class="flex items-center shrink-0">
                     <a href="{{ route('home') }}" class="text-3xl font-bold text-slate-800 flex items-center gap-3">
                         <img src="{{ asset('images/logo.png') }}" alt="DavMart Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl object-cover shadow-sm ring-2 ring-slate-100">
-                        <span class="hidden sm:inline">DavMart</span><span class="sm:hidden">DM</span>
+                        <span class="hidden sm:inline">DavMart</span><span class="sm:hidden">DavMart</span>
                     </a>
                 </div>
 
-                {{-- TENGAH: NAVIGASI MENU UTAMA (DESKTOP ONLY) --}}
+                {{-- TENGAH: NAVIGASI MENU UTAMA (DESKTOP) --}}
                 <div class="hidden lg:flex flex-grow justify-start ml-8 space-x-2 items-center">
                     
                     @auth
-                        {{-- Menggunakan warna aksen Amber/Slate --}}
                         <a href="{{ route('dashboard') }}" class="py-2 px-3 text-sm font-semibold rounded-lg transition {{ request()->routeIs('profile.edit') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-amber-50 hover:text-amber-700' }}">
                             Profil Saya
                         </a>
@@ -51,24 +48,20 @@
                     @endauth
                 </div>
 
-                {{-- KANAN: USER PROFILE & ACTION (DESKTOP ONLY) --}}
+                {{-- KANAN: USER PROFILE & ACTION (DESKTOP) --}}
                 <div class="hidden lg:flex items-center gap-4 shrink-0">
                     @auth
-                        {{-- Link Pengaturan Akun --}}
                         <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
                             Pengaturan Akun
                         </a>
 
-                        {{-- Divider --}}
                         <div class="h-5 w-px bg-slate-300"></div>
 
-                        {{-- Tombol Beranda --}}
                         <a href="{{ route('home') }}" class="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-amber-700 transition shadow-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                             <span>Beranda</span>
                         </a>
 
-                        {{-- Tombol Logout (Warna Aksen Amber) --}}
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="px-3 py-1.5 text-sm font-bold text-amber-700 bg-amber-50 border border-amber-100 rounded-lg hover:bg-amber-100 transition shadow-sm">
@@ -81,7 +74,6 @@
                     @endauth
                 </div>
 
-                {{-- TOMBOL BURGER (MOBILE) --}}
                 <div class="lg:hidden flex items-center">
                     <button @click="open = ! open" class="p-2 text-slate-500 rounded-lg hover:bg-slate-100 focus:outline-none focus:bg-slate-100 transition">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -100,7 +92,6 @@
         >
             <div class="space-y-1 mb-2">
                 @auth
-                    {{-- Navigasi Mobile --}}
                     <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold transition {{ request()->routeIs('profile.edit') ? 'bg-amber-50 text-amber-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         Profil Saya
                     </a>
@@ -108,7 +99,7 @@
                         Keranjang Belanja
                     </a>
                     <a href="{{ route('wishlist.index') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold transition {{ request()->routeIs('wishlist.*') ? 'bg-amber-50 text-amber-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                        Wishlist Saya
+                        Wishlist
                     </a>
                     <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold transition {{ request()->routeIs('orders.*') ? 'bg-amber-50 text-amber-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         Riwayat Pesanan
@@ -119,9 +110,6 @@
             <div class="border-t border-slate-100 pt-2">
                 @auth
                     <div class="space-y-1">
-                        <div class="px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                            Halo, {{ Auth::user()->name }}
-                        </div>
                         <a href="{{ route('profile.edit') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900">
                             Pengaturan Akun
                         </a>

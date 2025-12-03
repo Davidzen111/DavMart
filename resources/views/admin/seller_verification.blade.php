@@ -8,7 +8,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             {{-- TOMBOL KEMBALI KE DASHBOARD ADMIN (Desktop) --}}
-            <div class="mb-4 hidden md:block">
+            <div class="mb-0 hidden md:block">
                 <a href="{{ route('admin.dashboard') }}"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium 
                            rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none 
@@ -20,18 +20,22 @@
                 </a>
             </div>
 
-            {{-- Header Mobile (Tombol Kembali ditambahkan di sini untuk tampilan mobile) --}}
-            <div class="md:hidden mb-6 px-4 sm:px-0 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-800">Verifikasi Seller</h2>
-                <a href="{{ route('admin.dashboard') }}" class="text-blue-600 text-sm hover:text-blue-800 font-medium">
-                    ← Kembali
-                </a>
+            {{-- Header Mobile (Tombol Kembali & Judul) --}}
+            <div class="md:hidden mb-6 px-4 sm:px-0 flex flex-col relative"> 
+
+                <div class="w-full mb-2"> 
+                    <a href="{{ route('admin.dashboard') }}" 
+                        class="text-gray-600 text-sm hover:text-gray-800 font-medium z-10">
+                        ← Kembali
+                    </a>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 w-full text-center">Verifikasi Seller</h2>
             </div>
 
-            {{-- CONTAINER UTAMA (Sidebar dihapus, layout disesuaikan) --}}
+            {{-- CONTAINER UTAMA --}}
             <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100">
                 
-                {{-- 2. KONTEN UTAMA --}}
                 <div class="w-full p-6 md:p-8">
                     <h1 class="text-3xl font-bold text-gray-800 mb-6 hidden md:block">Verifikasi Seller Baru</h1>
                     
@@ -49,6 +53,7 @@
                                 <p class="text-gray-500 italic font-medium">Tidak ada pendaftaran seller baru saat ini.</p>
                             </div>
                         @else
+                            {{-- Tabel Daftar Seller Pending --}}
                             <div class="overflow-x-auto border border-gray-100 rounded-lg">
                                 <table class="min-w-full bg-white text-sm">
                                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-bold tracking-wider">
@@ -67,23 +72,21 @@
                                             <td class="py-3 px-6 text-center text-gray-600">{{ $seller->created_at->format('d M Y') }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex item-center justify-center gap-2">
-                                                    {{-- Tombol Approve --}}
                                                     <form action="{{ route('admin.seller.approve', $seller->id) }}" method="POST">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="approved">
                                                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full text-xs transform hover:scale-105 transition shadow-md">
-                                                             Approve
+                                                            Approve
                                                         </button>
                                                     </form>
 
-                                                    {{-- Tombol Reject --}}
                                                     <form action="{{ route('admin.seller.approve', $seller->id) }}" method="POST">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="rejected">
                                                         <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full text-xs transform hover:scale-105 transition shadow-md" onclick="return confirm('Yakin ingin menolak seller ini?')">
-                                                             Reject
+                                                            Reject
                                                         </button>
                                                     </form>
                                                 </div>

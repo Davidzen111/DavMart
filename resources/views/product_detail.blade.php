@@ -13,7 +13,7 @@
 </head>
 <body class="bg-slate-50 font-sans antialiased text-slate-600">
 
-    {{-- NAVIGATION BAR --}}
+    {{-- NAVIGATION BAR (Bagian navigasi utama) --}}
     <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
@@ -24,12 +24,13 @@
                             <img src="{{ asset('images/logo.png') }}" alt="DavMart" class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl object-cover shadow-sm ring-2 ring-slate-100 transition-transform group-hover:scale-105">
                         </div>
                         <span class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight hidden sm:block group-hover:text-amber-700 transition-colors">DavMart</span>
-                        <span class="text-lg font-bold text-slate-900 sm:hidden">DM</span>
+                        <span class="text-lg font-bold text-slate-900 sm:hidden">DavMart</span>
                     </a>
                 </div>
 
                 <div class="flex items-center gap-2 md:gap-4">
                     @auth
+                        {{-- Dropdown Profil Pengguna --}}
                         <div class="relative ml-1 md:ml-3">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
@@ -77,11 +78,10 @@
         </div>
     </nav>
 
-    {{-- PRODUCT DETAIL CONTENT --}}
+    {{-- PRODUCT DETAIL CONTENT (Konten Utama Halaman) --}}
     <div class="py-8 md:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- TOMBOL KEMBALI --}}
             <div class="mb-6 md:mb-8">
                 <a href="{{ route('home') }}" class="inline-flex items-center text-slate-500 hover:text-amber-600 font-medium transition-all group">
                     <div class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center mr-2 group-hover:border-amber-400 group-hover:bg-amber-50 transition-all shadow-md">
@@ -89,11 +89,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
                     </div>
-                    {{-- Menghilangkan teks "Kembali" dari tombol bulat, hanya menggunakan ikon --}}
                 </a>
             </div>
 
-            {{-- PRODUCT INFO CARD (Image + Details) --}}
+            {{-- PRODUCT INFO CARD (Gambar + Detail Produk) --}}
             <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8 mb-8">
 
                 {{-- PRODUCT IMAGE --}}
@@ -111,13 +110,15 @@
                 {{-- PRODUCT DETAILS --}}
                 <div class="flex flex-col">
                     <div class="mb-4">
+                        {{-- Kategori Produk --}}
                         <span class="inline-block bg-slate-100 text-slate-600 border border-slate-200 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider mb-2">
                             {{ $product->category->name }}
                         </span>
+                        {{-- Nama Produk --}}
                         <h1 class="text-2xl md:text-4xl font-bold text-slate-900 leading-tight">{{ $product->name }}</h1>
                     </div>
 
-                    {{-- Rating, Review Count, Stock --}}
+                    {{-- Rating, Jumlah Ulasan, dan Stok --}}
                     <div class="flex items-center gap-2 mb-6">
                         <div class="flex text-amber-500 text-lg">★</div>
                         <span class="font-bold text-slate-800 text-lg">{{ number_format($ratingAvg ?? 0, 1) }}</span>
@@ -126,12 +127,12 @@
                         <span class="text-slate-500 text-sm">Stok: <span class="font-bold text-slate-800">{{ $product->stock }}</span></span>
                     </div>
 
-                    {{-- Price --}}
+                    {{-- Harga Produk --}}
                     <div class="mb-8 p-3 bg-slate-100 rounded-lg inline-block border border-slate-200">
                         <p class="text-3xl md:text-4xl font-extrabold text-slate-900">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                     </div>
 
-                    {{-- Store Info --}}
+                    {{-- Store Info (Informasi Toko Penjual) --}}
                     <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 mb-8">
                         <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white text-slate-700 flex items-center justify-center font-bold text-lg border border-slate-200 shadow-sm">
                             {{ substr($product->store->name, 0, 1) }}
@@ -142,14 +143,14 @@
                         </div>
                     </div>
                     
-                    {{-- PRODUCT DESCRIPTION (Tambahan: Masukkan deskripsi di sini) --}}
+                    {{-- PRODUCT DESCRIPTION (Deskripsi) --}}
                     <div class="mb-8">
                         <h4 class="text-lg font-bold text-slate-800 mb-3 border-b border-slate-100 pb-1">Deskripsi Produk</h4>
                         <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-wrap">{{ $product->description }}</p>
                     </div>
 
 
-                    {{-- ACTION BUTTONS (Add to Cart / Wishlist / Login) --}}
+                    {{-- ACTION BUTTONS (Keranjang / Wishlist / Login) --}}
                     <div class="mt-auto pt-4 border-t border-slate-100">
                         @auth
                             @if(Auth::user()->role === 'buyer')
@@ -163,6 +164,7 @@
                                         </button>
                                     </form>
 
+                                    {{-- Tombol Wishlist --}}
                                     <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="w-full font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2
@@ -189,11 +191,13 @@
                                     </form>
                                 </div>
                             @else
+                                {{-- Pesan jika bukan role Buyer --}}
                                 <div class="p-4 bg-slate-100 rounded-xl text-center border border-slate-200">
-                                    <p class="text-slate-500 font-medium">Anda login sebagai **{{ Auth::user()->role }}**. Login sebagai Buyer untuk membeli.</p>
+                                    <p class="text-slate-500 font-medium">Anda login sebagai {{ Auth::user()->role }}. Login sebagai Buyer untuk membeli.</p>
                                 </div>
                             @endif
                         @else
+                            {{-- Tombol Login (Jika Belum Login) --}}
                             <a href="{{ route('login') }}" class="block text-center w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 shadow-lg transition">
                                 Login untuk Membeli
                             </a>
@@ -202,7 +206,7 @@
                 </div>
             </div>
             
-            {{-- REVIEWS/ULASAN SECTION --}}
+            {{-- REVIEWS/ULASAN SECTION (Bagian Ulasan Pembeli) --}}
             <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 md:p-8">
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-xl md:text-2xl font-bold text-slate-800">Ulasan Pembeli</h3>
@@ -218,6 +222,7 @@
                         <p class="text-slate-400 text-sm">Produk ini belum memiliki ulasan dari pembeli.</p>
                     </div>
                 @else
+                    {{-- Daftar Ulasan --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @foreach($product->reviews as $review)
                         <div class="bg-white rounded-xl border border-slate-100 p-5 hover:border-slate-300 hover:shadow-md transition-all duration-300">
@@ -232,6 +237,7 @@
                                     </div>
                                 </div>
 
+                                {{-- Rating Bintang --}}
                                 <div class="flex bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
                                     <div class="flex text-amber-500 text-xs">
                                         @for($i=0; $i < $review->rating; $i++) ★ @endfor
@@ -255,7 +261,7 @@
         </div>
     </div>
 
-    {{-- FOOTER --}}
+    {{-- FOOTER (Hak Cipta dan Info) --}}
     <footer class="bg-white border-t border-slate-200 py-8 md:py-12 mt-8 md:mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h4 class="font-bold text-slate-800 text-base md:text-lg mb-2">DavMart</h4>

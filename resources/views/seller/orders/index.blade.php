@@ -12,19 +12,19 @@
     <div class="py-8 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            {{-- TOMBOL KEMBALI KE DASHBOARD SELLER (Ikon Bulat Konsisten) --}}
+            {{-- TOMBOL KEMBALI KE DASHBOARD SELLER --}}
             <div class="mb-6 flex justify-between items-center">
                 {{-- Tombol Kembali Desktop --}}
                 <a href="{{ route('seller.dashboard') }}"
                     class="inline-flex items-center justify-center w-10 h-10 p-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md">
+                           focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150 ease-in-out rounded-full shadow-md">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                 </a>
             </div>
 
-            {{-- CONTAINER UTAMA --}}
+            {{-- CONTAINER UTAMA (Daftar Pesanan) --}}
             <div class="bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 min-h-screen">
                 
                 {{-- KONTEN UTAMA --}}
@@ -53,6 +53,7 @@
                             <p class="text-sm text-slate-400">Silakan cek lagi nanti.</p>
                         </div>
                     @else
+                        {{-- Tabel Daftar Pesanan --}}
                         <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-md">
                             <table class="min-w-full bg-white">
                                 {{-- Table Header --}}
@@ -82,6 +83,7 @@
                                             Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                                         </td>
                                         <td class="py-3 px-4 text-center">
+                                            {{-- Form Update Status --}}
                                             <form action="{{ route('seller.orders.update', $item->id) }}" method="POST" class="flex items-center gap-2 justify-center">
                                                 @csrf
                                                 @method('PATCH')
